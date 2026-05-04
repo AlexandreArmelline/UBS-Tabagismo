@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Botão Voltar -->
+            <a href="menu.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Voltar ao Menu
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        
+        <!-- 3.1 CABEÇALHO DA PÁGINA -->
+        <div class="text-center mb-5">
+            <div class="icone-ferramenta bg-dark bg-opacity-10 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                <i class="bi bi-gear-fill text-dark" style="font-size: 2rem;"></i>
+            </div>
+            <h3 class="fw-bold text-dark">Administração do Sistema</h3>
+            <p class="text-muted small">Gerencie usuários, visualize logs e configure o sistema</p>
+            <hr class="w-25 mx-auto" style="border-color: #333; border-width: 2px;">
+        </div>
+        
+        <!-- 3.2 CARDS DE ADMINISTRAÇÃO -->
+        <div class="row g-4 mb-4">
+            
+            <!-- 3.2.1 Card Total de Usuários -->
+            <div class="col-6 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-primary bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-badge-fill text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-primary mb-1" id="kpiTotalUsuarios">0</h2>
+                        <p class="text-muted small mb-0">Total de Usuários</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.2.2 Card Administradores -->
+            <div class="col-6 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-danger bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-shield-lock-fill text-danger" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-danger mb-1" id="kpiTotalAdmins">0</h2>
+                        <p class="text-muted small mb-0">Administradores</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.2.3 Card Operadores -->
+            <div class="col-6 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-success bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-check-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-success mb-1" id="kpiTotalOperadores">0</h2>
+                        <p class="text-muted small mb-0">Operadores</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 3.3 TABELA DE USUÁRIOS -->
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-white rounded-top-4 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-people-fill me-2 text-dark"></i>Usuários do Sistema
+                </h5>
+                <a href="add-usuario.html" class="btn btn-success btn-sm">
+                    <i class="bi bi-person-plus-fill me-1"></i>Novo Usuário
+                </a>
+            </div>
+            <div class="card-body p-0">
+                
+                <!-- 3.3.1 Tabela Desktop -->
+                <div class="table-responsive d-none d-md-block">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Nome</th>
+                                <th>Login</th>
+                                <th>CPF</th>
+                                <th>Perfil</th>
+                                <th>Status</th>
+                                <th class="pe-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaUsuarios">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox me-1"></i>Nenhum usuário cadastrado.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 3.3.2 Cards Mobile -->
+                <div id="cardsUsuarios" class="d-md-none p-3">
+                    <!-- Preenchido via JS -->
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- 3.4 LOG DE ATIVIDADES -->
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white rounded-top-4 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-journal-text me-2 text-dark"></i>Log de Atividades
+                </h5>
+                <button class="btn btn-outline-secondary btn-sm" onclick="limparLogs()">
+                    <i class="bi bi-eraser-fill me-1"></i>Limpar Logs
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Data/Hora</th>
+                                <th>Usuário</th>
+                                <th>Ação</th>
+                                <th class="pe-4">Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaLogs">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox me-1"></i>Nenhuma atividade registrada.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3.5 MENSAGEM DE FEEDBACK -->
+        <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
+        
+    </div>
+
+    <!-- 4 MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Exclusão
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir o usuário <strong id="nomeUsuarioExcluir"></strong>?</p>
+                    <p class="text-danger small mb-0">
+                        <i class="bi bi-info-circle me-1"></i>Esta ação não pode ser desfeita.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">
+                        <i class="bi bi-trash-fill me-1"></i>Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5 SCRIPTS -->
+    <!-- 5.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 5.2 Script de inicialização do admin -->
+    <script>
+        // 6 INICIALIZAÇÃO DA PÁGINA
+        // 6.1 Variável para exclusão
+        let usuarioParaExcluir = null;
+        
+        // 6.2 Verificar sessão ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            
+            // 6.2.1 Verificar se há sessão ativa
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 6.2.2 Verificar se é admin
+            if (sessao.perfil !== 'admin') {
+                window.location.href = 'menu.html';
+                return;
+            }
+            
+            // 6.2.3 Carregar dados
+            carregarKPIsAdmin();
+            carregarTabelaUsuarios();
+            carregarLogs();
+            
+            // 6.2.4 Configurar botão de exclusão do modal
+            document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
+        });
+        
+        // 7 FUNÇÕES DE CARREGAMENTO DE DADOS
+        // 7.1 Carregar KPIs de administração
+        function carregarKPIsAdmin() {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            
+            document.getElementById('kpiTotalUsuarios').textContent = usuarios.length;
+            document.getElementById('kpiTotalAdmins').textContent = usuarios.filter(u => u.perfil === 'admin').length;
+            document.getElementById('kpiTotalOperadores').textContent = usuarios.filter(u => u.perfil === 'operador').length;
+        }
+        
+        // 7.2 Carregar tabela de usuários
+        function carregarTabelaUsuarios() {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            
+            const tabela = document.getElementById('tabelaUsuarios');
+            const cards = document.getElementById('cardsUsuarios');
+            
+            if (usuarios.length === 0) {
+                tabela.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhum usuário cadastrado.</td></tr>`;
+                cards.innerHTML = '';
+                return;
+            }
+            
+            // 7.2.1 Preencher tabela desktop
+            tabela.innerHTML = usuarios.map(u => `
+                <tr>
+                    <td class="ps-4 fw-semibold">${u.nome}</td>
+                    <td>${u.login}</td>
+                    <td>${u.cpf}</td>
+                    <td>
+                        <span class="badge ${u.perfil === 'admin' ? 'bg-danger' : 'bg-success'} rounded-pill">
+                            ${u.perfil === 'admin' ? 'Administrador' : 'Operador'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${u.ativo !== false ? 'bg-success' : 'bg-secondary'} rounded-pill">
+                            ${u.ativo !== false ? 'Ativo' : 'Inativo'}
+                        </span>
+                    </td>
+                    <td class="pe-4 text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editarUsuario(${u.id})" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        ${u.perfil !== 'admin' ? `
+                            <button class="btn btn-sm btn-outline-warning me-1" onclick="alterarStatus(${u.id})" title="Ativar/Inativar">
+                                <i class="bi bi-toggle-on"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="abrirModalExclusao(${u.id})" title="Excluir">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            // 7.2.2 Preencher cards mobile
+            cards.innerHTML = usuarios.map(u => `
+                <div class="card shadow-sm border-0 rounded-4 mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0">${u.nome}</h6>
+                            <span class="badge ${u.perfil === 'admin' ? 'bg-danger' : 'bg-success'} rounded-pill">
+                                ${u.perfil === 'admin' ? 'Admin' : 'Operador'}
+                            </span>
+                        </div>
+                        <p class="small text-muted mb-1">
+                            <i class="bi bi-person me-1"></i>Login: ${u.login}
+                        </p>
+                        <p class="small text-muted mb-1">
+                            <i class="bi bi-person-vcard me-1"></i>CPF: ${u.cpf}
+                        </p>
+                        <p class="small text-muted mb-2">
+                            <i class="bi bi-check-circle me-1"></i>Status: ${u.ativo !== false ? 'Ativo' : 'Inativo'}
+                        </p>
+                        ${u.perfil !== 'admin' ? `
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editarUsuario(${u.id})">
+                                    <i class="bi bi-pencil-fill me-1"></i>Editar
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="abrirModalExclusao(${u.id})">
+                                    <i class="bi bi-trash-fill me-1"></i>Excluir
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 7.3 Carregar logs de atividades
+        function carregarLogs() {
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            const tabela = document.getElementById('tabelaLogs');
+            
+            if (logs.length === 0) {
+                tabela.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhuma atividade registrada.</td></tr>`;
+                return;
+            }
+            
+            const ultimos = logs
+                .sort((a, b) => new Date(b.dataHora) - new Date(a.dataHora))
+                .slice(0, 20);
+            
+            tabela.innerHTML = ultimos.map(log => `
+                <tr>
+                    <td class="ps-4 small">${formatarDataHora(log.dataHora)}</td>
+                    <td>${log.usuario}</td>
+                    <td>
+                        <span class="badge bg-info rounded-pill">${log.acao}</span>
+                    </td>
+                    <td class="pe-4 small">${log.detalhes}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // 8 FUNÇÕES DE AÇÕES
+        // 8.1 Editar usuário (redireciona para add-usuario com parâmetro)
+        function editarUsuario(id) {
+            window.location.href = `add-usuario.html?editar=${id}`;
+        }
+        
+        // 8.2 Alterar status (ativar/inativar)
+        function alterarStatus(id) {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            const index = usuarios.findIndex(u => u.id === id);
+            
+            if (index !== -1) {
+                usuarios[index].ativo = !(usuarios[index].ativo !== false);
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                
+                const status = usuarios[index].ativo !== false ? 'ativado' : 'inativado';
+                exibirFeedback(`Usuário ${status} com sucesso!`, 'success');
+                carregarTabelaUsuarios();
+                carregarKPIsAdmin();
+            }
+        }
+        
+        // 8.3 Abrir modal de confirmação de exclusão
+        function abrirModalExclusao(id) {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            const usuario = usuarios.find(u => u.id === id);
+            
+            if (usuario) {
+                usuarioParaExcluir = id;
+                document.getElementById('nomeUsuarioExcluir').textContent = usuario.nome;
+                
+                const modal = new bootstrap.Modal(document.getElementById('modalConfirmarExclusao'));
+                modal.show();
+            }
+        }
+        
+        // 8.4 Confirmar exclusão
+        function confirmarExclusao() {
+            if (!usuarioParaExcluir) return;
+            
+            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            const nome = usuarios.find(u => u.id === usuarioParaExcluir)?.nome || 'Desconhecido';
+            usuarios = usuarios.filter(u => u.id !== usuarioParaExcluir);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao'));
+            modal.hide();
+            
+            exibirFeedback(`Usuário "${nome}" excluído com sucesso!`, 'success');
+            carregarTabelaUsuarios();
+            carregarKPIsAdmin();
+            usuarioParaExcluir = null;
+        }
+        
+        // 8.5 Limpar logs
+        function limparLogs() {
+            if (confirm('Deseja realmente limpar todos os logs de atividade?')) {
+                localStorage.setItem('logs', JSON.stringify([]));
+                carregarLogs();
+                exibirFeedback('Logs limpos com sucesso!', 'success');
+            }
+        }
+        
+        // 9 FUNÇÕES AUXILIARES
+        // 9.1 Formatar data e hora
+        function formatarDataHora(dataISO) {
+            if (!dataISO) return '-';
+            const data = new Date(dataISO);
+            return data.toLocaleString('pt-BR');
+        }
+        
+        // 9.2 Exibir feedback
+        function exibirFeedback(mensagem, tipo) {
+            const msgFeedback = document.getElementById('msgFeedback');
+            const icone = tipo === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill';
+            msgFeedback.className = `alert alert-${tipo} mt-3 text-center rounded-3`;
+            msgFeedback.innerHTML = `<i class="bi bi-${icone} me-1"></i>${mensagem}`;
+            msgFeedback.classList.remove('d-none');
+            
+            setTimeout(() => {
+                msgFeedback.classList.add('d-none');
+            }, 5000);
+        }
+        
+        // 9.3 Registrar log (função global para outras páginas)
+        function registrarLog(acao, detalhes) {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            const logs = JSON.parse(localStorage.getItem('logs')) || [];
+            
+            logs.push({
+                dataHora: new Date().toISOString(),
+                usuario: sessao ? sessao.nome : 'Sistema',
+                acao,
+                detalhes
+            });
+            
+            localStorage.setItem('logs', JSON.stringify(logs));
+        }
+    </script>
+
+</body>
+</html>

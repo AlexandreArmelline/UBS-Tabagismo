@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Clínico - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Botão Voltar -->
+            <a href="pesquisa.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                
+                <!-- 3.1 CABEÇALHO DA PÁGINA -->
+                <div class="text-center mb-4">
+                    <div class="icone-ferramenta bg-info bg-opacity-10 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-clipboard2-pulse-fill text-info" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="fw-bold text-info">Registro Clínico</h3>
+                    <p class="text-muted small" id="subtituloPagina">Carregando dados do paciente...</p>
+                </div>
+                
+                <!-- 3.2 CARD DE DADOS DO PACIENTE -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4" id="cardPaciente" style="display: none;">
+                    <div class="card-header bg-success text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-fill me-2"></i>
+                            <span id="nomePacienteCabecalho"></span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 small">
+                            <div class="col-6 col-md-3">
+                                <strong>CPF:</strong><br>
+                                <span id="infoCpf"></span>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <strong>Data Nasc.:</strong><br>
+                                <span id="infoNascimento"></span>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <strong>Telefone:</strong><br>
+                                <span id="infoTelefone"></span>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <strong>Adesão ao Grupo:</strong><br>
+                                <span id="infoAdesao"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3.3 CARD DO FORMULÁRIO DE REGISTRO -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4" id="cardFormulario" style="display: none;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-info mb-3">
+                            <i class="bi bi-plus-circle-fill me-2"></i>Novo Registro Clínico
+                        </h5>
+                        
+                        <form id="formRegistroClinico" novalidate>
+                            
+                            <!-- 3.3.1 Campo Data do Atendimento -->
+                            <div class="mb-3">
+                                <label for="dataAtendimento" class="form-label fw-semibold">
+                                    <i class="bi bi-calendar-event-fill me-1 text-info"></i>Data do Atendimento
+                                </label>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="dataAtendimento" 
+                                    required
+                                >
+                            </div>
+                            
+                            <!-- 3.3.2 Linha Peso e Pressão Arterial -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <label for="peso" class="form-label fw-semibold">
+                                        <i class="bi bi-speedometer me-1 text-info"></i>Peso (kg)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        id="peso" 
+                                        placeholder="Ex: 70,5"
+                                        step="0.1"
+                                        min="20"
+                                        max="300"
+                                    >
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="pressaoSistolica" class="form-label fw-semibold">
+                                        Pressão Sistólica
+                                    </label>
+                                    <div class="input-group">
+                                        <input 
+                                            type="number" 
+                                            class="form-control" 
+                                            id="pressaoSistolica" 
+                                            placeholder="Ex: 120"
+                                            min="60"
+                                            max="250"
+                                        >
+                                        <span class="input-group-text">mmHg</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="pressaoDiastolica" class="form-label fw-semibold">
+                                        Pressão Diastólica
+                                    </label>
+                                    <div class="input-group">
+                                        <input 
+                                            type="number" 
+                                            class="form-control" 
+                                            id="pressaoDiastolica" 
+                                            placeholder="Ex: 80"
+                                            min="30"
+                                            max="150"
+                                        >
+                                        <span class="input-group-text">mmHg</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 3.3.3 Campo Status do Tabagismo -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    <i class="bi bi-fire me-1 text-info"></i>Fuma Atualmente?
+                                </label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="fumaAtualmente" id="fumaSim" value="sim">
+                                        <label class="form-check-label" for="fumaSim">Sim</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="fumaAtualmente" id="fumaNao" value="nao">
+                                        <label class="form-check-label" for="fumaNao">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 3.3.4 Campo Quantidade de Cigarros/Dia -->
+                            <div class="mb-3" id="campoQuantidadeCigarros">
+                                <label for="quantidadeCigarros" class="form-label fw-semibold">
+                                    <i class="bi bi-slash-circle me-1 text-info"></i>Quantidade de Cigarros por Dia
+                                </label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="quantidadeCigarros" 
+                                    placeholder="Ex: 20"
+                                    min="0"
+                                    max="100"
+                                >
+                            </div>
+                            
+                            <!-- 3.3.5 Campo Medicamento Utilizado -->
+                            <div class="mb-3">
+                                <label for="medicamento" class="form-label fw-semibold">
+                                    <i class="bi bi-capsule me-1 text-info"></i>Medicamento Utilizado
+                                </label>
+                                <select class="form-select" id="medicamento">
+                                    <option value="" selected>Nenhum / Não informado</option>
+                                    <option value="adesivo">Adesivo de Nicotina</option>
+                                    <option value="goma">Goma de Mascar</option>
+                                    <option value="bupropiona">Bupropiona</option>
+                                    <option value="vareniclina">Vareniclina</option>
+                                    <option value="pastilha">Pastilha de Nicotina</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 3.3.6 Linha Dias sem Fumar e Recaídas -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="diasSemFumar" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-check me-1 text-info"></i>Dias sem Fumar
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        id="diasSemFumar" 
+                                        placeholder="Ex: 30"
+                                        min="0"
+                                    >
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="recaidas" class="form-label fw-semibold">
+                                        <i class="bi bi-arrow-repeat me-1 text-info"></i>Nº de Recaídas no Período
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        id="recaidas" 
+                                        placeholder="Ex: 1"
+                                        min="0"
+                                    >
+                                </div>
+                            </div>
+                            
+                            <!-- 3.3.7 Campo Gatilhos/Motivos -->
+                            <div class="mb-3">
+                                <label for="gatilhos" class="form-label fw-semibold">
+                                    <i class="bi bi-exclamation-triangle-fill me-1 text-info"></i>Gatilhos/Motivos que Levam a Fumar
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="gatilhos" 
+                                    rows="2" 
+                                    placeholder="Ex: Estresse, ansiedade, café, álcool..."
+                                    maxlength="300"
+                                ></textarea>
+                            </div>
+                            
+                            <!-- 3.3.8 Campo Hobbies -->
+                            <div class="mb-3">
+                                <label for="hobbies" class="form-label fw-semibold">
+                                    <i class="bi bi-heart-fill me-1 text-info"></i>Hobbies/Atividades
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="hobbies" 
+                                    placeholder="Ex: Caminhada, leitura, música..."
+                                    maxlength="200"
+                                >
+                            </div>
+                            
+                            <!-- 3.3.9 Campo Ambiente Familiar -->
+                            <div class="mb-3">
+                                <label for="ambienteFamiliar" class="form-label fw-semibold">
+                                    <i class="bi bi-people-fill me-1 text-info"></i>Ambiente Familiar (Fumantes em Casa?)
+                                </label>
+                                <select class="form-select" id="ambienteFamiliar">
+                                    <option value="" selected>Não informado</option>
+                                    <option value="sem_fumantes">Sem fumantes no ambiente</option>
+                                    <option value="com_fumantes">Há fumantes no ambiente</option>
+                                    <option value="misto">Ambiente misto (trabalho/casa)</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 3.3.10 Campo Observações Clínicas -->
+                            <div class="mb-4">
+                                <label for="observacoesClinicas" class="form-label fw-semibold">
+                                    <i class="bi bi-chat-left-text-fill me-1 text-info"></i>Observações Clínicas
+                                </label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="observacoesClinicas" 
+                                    rows="3" 
+                                    placeholder="Registre observações relevantes sobre o atendimento..."
+                                    maxlength="500"
+                                ></textarea>
+                            </div>
+                            
+                            <!-- 3.3.11 Botões de Ação -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='pesquisa.html'">
+                                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-info text-white">
+                                    <i class="bi bi-save-fill me-1"></i>Salvar Registro
+                                </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+                
+                <!-- 3.4 MENSAGEM DE FEEDBACK -->
+                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
+                
+                <!-- 3.5 HISTÓRICO DE REGISTROS -->
+                <div class="card shadow-sm border-0 rounded-4" id="cardHistorico" style="display: none;">
+                    <div class="card-header bg-light rounded-top-4">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-clock-history me-2 text-info"></i>Histórico de Registros
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Data</th>
+                                        <th>Peso</th>
+                                        <th>Pressão</th>
+                                        <th>Fuma</th>
+                                        <th>Cigarros/Dia</th>
+                                        <th class="pe-4">Medicamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaHistorico">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado para este paciente.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 SCRIPTS -->
+    <!-- 4.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4.2 Registro JS -->
+    <script src="js/registro.js"></script>
+    
+    <!-- 4.3 Script de inicialização da página -->
+    <script>
+        // 5 INICIALIZAÇÃO DA PÁGINA
+        // 5.1 Variável global do paciente atual
+        let pacienteAtual = null;
+        
+        // 5.2 Verificar sessão e carregar dados ao iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 5.2.1 Obter ID do paciente pela URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const idPaciente = urlParams.get('id');
+            
+            if (!idPaciente) {
+                window.location.href = 'pesquisa.html';
+                return;
+            }
+            
+            // 5.2.2 Carregar dados do paciente
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            pacienteAtual = pacientes.find(p => p.id === parseInt(idPaciente));
+            
+            if (!pacienteAtual) {
+                window.location.href = 'pesquisa.html';
+                return;
+            }
+            
+            // 5.2.3 Exibir dados do paciente
+            carregarDadosPaciente();
+            
+            // 5.2.4 Carregar histórico
+            carregarHistorico();
+            
+            // 5.2.5 Configurar data atual como padrão
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataAtendimento').value = hoje;
+            document.getElementById('dataAtendimento').setAttribute('max', hoje);
+            
+            // 5.2.6 Mostrar/esconder campo cigarros conforme status
+            document.querySelectorAll('input[name="fumaAtualmente"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const campo = document.getElementById('campoQuantidadeCigarros');
+                    campo.style.display = this.value === 'sim' ? '' : 'none';
+                    if (this.value === 'nao') {
+                        document.getElementById('quantidadeCigarros').value = '';
+                    }
+                });
+            });
+            
+            // 5.2.7 Configurar submit do formulário
+            const form = document.getElementById('formRegistroClinico');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarRegistroClinico();
+            });
+        });
+        
+        // 6 FUNÇÕES DE EXIBIÇÃO DE DADOS
+        // 6.1 Carregar dados do paciente nos cards
+        function carregarDadosPaciente() {
+            if (!pacienteAtual) return;
+            
+            document.getElementById('subtituloPagina').textContent = 'Registro de indicadores e evolução do paciente';
+            document.getElementById('nomePacienteCabecalho').textContent = pacienteAtual.nomeCompleto;
+            document.getElementById('infoCpf').textContent = pacienteAtual.cpf;
+            document.getElementById('infoNascimento').textContent = formatarData(pacienteAtual.dataNascimento);
+            document.getElementById('infoTelefone').textContent = pacienteAtual.telefone || 'Não informado';
+            document.getElementById('infoAdesao').textContent = formatarData(pacienteAtual.dataAdesao);
+            
+            document.getElementById('cardPaciente').style.display = '';
+            document.getElementById('cardFormulario').style.display = '';
+            document.getElementById('cardHistorico').style.display = '';
+        }
+        
+        // 6.2 Carregar histórico de registros
+        function carregarHistorico() {
+            if (!pacienteAtual) return;
+            
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const historico = registros
+                .filter(r => r.id_paciente === pacienteAtual.id)
+                .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
+            
+            const tabela = document.getElementById('tabelaHistorico');
+            
+            if (historico.length === 0) {
+                tabela.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado para este paciente.
+                        </td>
+                    </tr>`;
+                return;
+            }
+            
+            tabela.innerHTML = historico.map(r => `
+                <tr>
+                    <td class="ps-4">${formatarData(r.dataAtendimento)}</td>
+                    <td>${r.peso || '-'} kg</td>
+                    <td>${r.pressaoSistolica || '-'}/${r.pressaoDiastolica || '-'} mmHg</td>
+                    <td>
+                        <span class="badge ${r.fumaAtualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">
+                            ${r.fumaAtualmente === 'sim' ? 'Sim' : 'Não'}
+                        </span>
+                    </td>
+                    <td>${r.quantidadeCigarros || '-'}</td>
+                    <td class="pe-4">${traduzirMedicamento(r.medicamento) || '-'}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // 7 FUNÇÕES AUXILIARES
+        // 7.1 Formatar data
+        function formatarData(dataISO) {
+            if (!dataISO) return '-';
+            const data = new Date(dataISO + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        // 7.2 Traduzir medicamento
+        function traduzirMedicamento(valor) {
+            const mapa = {
+                'adesivo': 'Adesivo de Nicotina',
+                'goma': 'Goma de Mascar',
+                'bupropiona': 'Bupropiona',
+                'vareniclina': 'Vareniclina',
+                'pastilha': 'Pastilha de Nicotina',
+                'outro': 'Outro'
+            };
+            return mapa[valor] || valor;
+        }
+        
+        // 7.3 Obter próximo ID de registro
+        function obterProximoIdRegistro() {
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            if (registros.length === 0) return 1;
+            return Math.max(...registros.map(r => r.id)) + 1;
+        }
+        
+        // 8 FUNÇÃO DE SALVAR REGISTRO
+        // 8.1 Salvar registro clínico
+        function salvarRegistroClinico() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            
+            const dataAtendimento = document.getElementById('dataAtendimento').value;
+            const peso = document.getElementById('peso').value;
+            const pressaoSistolica = document.getElementById('pressaoSistolica').value;
+            const pressaoDiastolica = document.getElementById('pressaoDiastolica').value;
+            const fumaAtualmente = document.querySelector('input[name="fumaAtualmente"]:checked')?.value || '';
+            const quantidadeCigarros = document.getElementById('quantidadeCigarros').value;
+            const medicamento = document.getElementById('medicamento').value;
+            const diasSemFumar = document.getElementById('diasSemFumar').value;
+            const recaidas = document.getElementById('recaidas').value;
+            const gatilhos = document.getElementById('gatilhos').value.trim();
+            const hobbies = document.getElementById('hobbies').value.trim();
+            const ambienteFamiliar = document.getElementById('ambienteFamiliar').value;
+            const observacoesClinicas = document.getElementById('observacoesClinicas').value.trim();
+            
+            // 8.1.1 Validar data
+            if (!dataAtendimento) {
+                exibirFeedback('Por favor, informe a data do atendimento.', 'danger');
+                return;
+            }
+            
+            // 8.1.2 Montar objeto registro
+            const registro = {
+                id: obterProximoIdRegistro(),
+                id_paciente: pacienteAtual.id,
+                id_usuario: sessao.id,
+                nome_usuario: sessao.nome,
+                dataAtendimento,
+                peso: peso || null,
+                pressaoSistolica: pressaoSistolica || null,
+                pressaoDiastolica: pressaoDiastolica || null,
+                fumaAtualmente,
+                quantidadeCigarros: quantidadeCigarros || null,
+                medicamento,
+                diasSemFumar: diasSemFumar || null,
+                recaidas: recaidas || null,
+                gatilhos,
+                hobbies,
+                ambienteFamiliar,
+                observacoesClinicas,
+                dataHoraRegistro: new Date().toISOString()
+            };
+            
+            // 8.1.3 Salvar no localStorage
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            registros.push(registro);
+            localStorage.setItem('registros', JSON.stringify(registros));
+            
+            // 8.1.4 Feedback e ações
+            exibirFeedback('Registro clínico salvo com sucesso!', 'success');
+            document.getElementById('formRegistroClinico').reset();
+            document.getElementById('dataAtendimento').value = new Date().toISOString().split('T')[0];
+            document.getElementById('campoQuantidadeCigarros').style.display = '';
+            
+            // Atualizar histórico
+            carregarHistorico();
+        }
+        
+        // 9 FUNÇÃO DE FEEDBACK
+        // 9.1 Exibir mensagem de feedback
+        function exibirFeedback(mensagem, tipo) {
+            const msgFeedback = document.getElementById('msgFeedback');
+            const icone = tipo === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill';
+            msgFeedback.className = `alert alert-${tipo} mt-3 text-center rounded-3`;
+            msgFeedback.innerHTML = `<i class="bi bi-${icone} me-1"></i>${mensagem}`;
+            msgFeedback.classList.remove('d-none');
+            
+            setTimeout(() => {
+                msgFeedback.classList.add('d-none');
+            }, 5000);
+        }
+    </script>
+
+</body>
+</html>

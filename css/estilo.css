@@ -1,0 +1,244 @@
+/* 1 RESET E ESTILOS GERAIS */
+/* 1.1 Fundo da página */
+body {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 1.2 Variáveis de cores */
+:root {
+    --cor-primaria: #2e7d32;
+    --cor-primaria-hover: #1b5e20;
+    --cor-secundaria: #66bb6a;
+    --cor-texto: #333333;
+    --cor-texto-claro: #666666;
+    --cor-borda: #dee2e6;
+}
+
+/* 2 ESTILOS DO CARD */
+/* 2.1 Sombra e transição */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 2.2 Ícone do cabeçalho */
+.card .bi-hospital {
+    color: var(--cor-primaria);
+}
+
+/* 3 ESTILOS DO FORMULÁRIO */
+/* 3.1 Inputs */
+.form-control {
+    border: 2px solid var(--cor-borda);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
+}
+
+/* 3.2 Botão Entrar */
+.btn-success {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--cor-primaria-hover);
+    border-color: var(--cor-primaria-hover);
+    transform: translateY(-1px);
+}
+
+.btn-success:active {
+    transform: translateY(0);
+}
+
+/* 3.3 Checkbox */
+.form-check-input:checked {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+/* 4 ESTILOS DE MENSAGENS */
+/* 4.1 Alerta de erro */
+.alert-danger {
+    background-color: #fff5f5;
+    border-color: #ffcdd2;
+    color: #c62828;
+    border-radius: 8px;
+}
+
+/* 5 RESPONSIVIDADE */
+/* 5.1 Ajustes para mobile */
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .btn-lg {
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* 6 ESTILOS DO MENU PRINCIPAL */
+/* 6.1 Cards de ferramentas */
+.card-ferramenta {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.card-ferramenta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--cor-primaria);
+}
+
+/* 6.2 Ícones das ferramentas */
+.icone-ferramenta {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.card-ferramenta:hover .icone-ferramenta {
+    transform: scale(1.1);
+}
+
+/* 6.3 Navbar */
+.navbar {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+}
+
+/* 7 ESTILOS DO FORMULÁRIO DE CADASTRO */
+/* 7.1 Labels */
+.form-label {
+    color: var(--cor-texto);
+    font-size: 0.9rem;
+}
+
+/* 7.2 Inputs e Selects */
+.form-control,
+.form-select {
+    border: 2px solid var(--cor-borda);
+    transition: all 0.3s ease;
+    padding: 0.6rem 0.8rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
+}
+
+/* 7.3 Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* 7.4 Validação visual */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+}
+
+/* 7.5 Feedback de sucesso/erro */
+.alert-success {
+    background-color: #f1f8e9;
+    border-color: #c8e6c9;
+    color: #2e7d32;
+    border-radius: 8px;
+}
+
+.alert-danger {
+    background-color: #fff5f5;
+    border-color: #ffcdd2;
+    color: #c62828;
+    border-radius: 8px;
+}
+
+/* 7.6 Botão Cancelar */
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+/* 8 ESTILOS DO DASHBOARD */
+/* 8.1 Cards KPI */
+.card-kpi {
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.card-kpi:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* 8.2 Ícones KPI */
+.icone-kpi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.card-kpi:hover .icone-kpi {
+    transform: scale(1.1);
+}
+
+/* 8.3 Barras do gráfico de status */
+#barraFumam,
+#barraNaoFumam,
+#barraSemRegistro {
+    min-height: 5px;
+    transition: height 0.6s ease;
+}
+
+/* 8.4 Tabelas do dashboard */
+.table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 8.5 Badges */
+.badge.rounded-pill {
+    padding: 0.35em 0.8em;
+    font-weight: 500;
+}
+
+/* 8.6 Responsividade dos cards KPI */
+@media (max-width: 576px) {
+    .card-kpi h2 {
+        font-size: 1.5rem;
+    }
+    
+    .icone-kpi {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .icone-kpi i {
+        font-size: 1.2rem !important;
+    }
+}

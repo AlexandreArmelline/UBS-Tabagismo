@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Usuário - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Botão Voltar -->
+            <a href="menu.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Voltar ao Menu
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                
+                <!-- 3.1 CABEÇALHO DA PÁGINA -->
+                <div class="text-center mb-4">
+                    <div class="icone-ferramenta bg-primary bg-opacity-10 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-person-badge-fill text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="fw-bold text-primary">Adicionar Usuário</h3>
+                    <p class="text-muted small">Cadastre um novo profissional para acessar o sistema</p>
+                </div>
+                
+                <!-- 3.2 CARD DO FORMULÁRIO -->
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        
+                        <!-- 3.2.1 Formulário -->
+                        <form id="formAddUsuario" novalidate>
+                            
+                            <!-- 3.2.2 Campo Nome Completo -->
+                            <div class="mb-3">
+                                <label for="nomeCompleto" class="form-label fw-semibold">
+                                    <i class="bi bi-person-fill me-1 text-primary"></i>Nome Completo
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="nomeCompleto" 
+                                    placeholder="Digite o nome completo do profissional"
+                                    required
+                                    maxlength="100"
+                                >
+                            </div>
+                            
+                            <!-- 3.2.3 Campo CPF -->
+                            <div class="mb-3">
+                                <label for="cpf" class="form-label fw-semibold">
+                                    <i class="bi bi-person-vcard-fill me-1 text-primary"></i>CPF
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="cpf" 
+                                    placeholder="000.000.000-00"
+                                    required
+                                    maxlength="14"
+                                >
+                            </div>
+                            
+                            <!-- 3.2.4 Campo Registro Profissional -->
+                            <div class="mb-3">
+                                <label for="registroProfissional" class="form-label fw-semibold">
+                                    <i class="bi bi-file-earmark-medical-fill me-1 text-primary"></i>Registro Profissional
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="registroProfissional" 
+                                    placeholder="Ex: CRF-SP 12345 ou CRM-SP 67890"
+                                    maxlength="30"
+                                >
+                                <div class="form-text small">Opcional. Informe o registro do conselho de classe.</div>
+                            </div>
+                            
+                            <!-- 3.2.5 Campo Login -->
+                            <div class="mb-3">
+                                <label for="login" class="form-label fw-semibold">
+                                    <i class="bi bi-person-check-fill me-1 text-primary"></i>Login de Acesso
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="login" 
+                                    placeholder="Digite o nome de usuário para login"
+                                    required
+                                    maxlength="50"
+                                    autocomplete="off"
+                                >
+                                <div class="form-text small">Este login será usado para acessar o sistema.</div>
+                            </div>
+                            
+                            <!-- 3.2.6 Linha Senha e Confirmar Senha -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="senha" class="form-label fw-semibold">
+                                        <i class="bi bi-lock-fill me-1 text-primary"></i>Senha
+                                    </label>
+                                    <div class="input-group">
+                                        <input 
+                                            type="password" 
+                                            class="form-control" 
+                                            id="senha" 
+                                            placeholder="Digite a senha"
+                                            required
+                                            minlength="6"
+                                            maxlength="30"
+                                            autocomplete="new-password"
+                                        >
+                                        <button class="btn btn-outline-secondary" type="button" id="btnVerSenha" title="Mostrar/ocultar senha">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="confirmarSenha" class="form-label fw-semibold">
+                                        <i class="bi bi-lock-fill me-1 text-primary"></i>Confirmar Senha
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="confirmarSenha" 
+                                        placeholder="Repita a senha"
+                                        required
+                                        minlength="6"
+                                        maxlength="30"
+                                        autocomplete="new-password"
+                                    >
+                                </div>
+                            </div>
+                            
+                            <!-- 3.2.7 Indicador de Força da Senha -->
+                            <div class="mb-3" id="forcaSenhaContainer" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <small class="me-2 fw-semibold">Força da senha:</small>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div id="barraForcaSenha" class="progress-bar" style="width: 0%;"></div>
+                                    </div>
+                                    <small id="textoForcaSenha" class="ms-2"></small>
+                                </div>
+                            </div>
+                            
+                            <!-- 3.2.8 Campo Perfil de Acesso -->
+                            <div class="mb-4">
+                                <label for="perfilAcesso" class="form-label fw-semibold">
+                                    <i class="bi bi-shield-lock-fill me-1 text-primary"></i>Perfil de Acesso
+                                </label>
+                                <select class="form-select" id="perfilAcesso" required>
+                                    <option value="" selected disabled>Selecione o perfil</option>
+                                    <option value="operador">Operador (Farmacêutico/Enfermeiro)</option>
+                                    <option value="admin">Administrador (Gestor da Unidade/TI)</option>
+                                </select>
+                                <div class="form-text small">
+                                    <strong>Operador:</strong> Cadastra pacientes e registros clínicos.<br>
+                                    <strong>Administrador:</strong> Acesso total, incluindo gestão de usuários.
+                                </div>
+                            </div>
+                            
+                            <!-- 3.2.9 Botões de Ação -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='menu.html'">
+                                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-person-badge-fill me-1"></i>Adicionar Usuário
+                                </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+                
+                <!-- 3.3 MENSAGEM DE FEEDBACK -->
+                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 SCRIPTS -->
+    <!-- 4.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4.2 Usuário JS (CRUD) -->
+    <script src="js/usuario.js"></script>
+    
+    <!-- 4.3 Script de inicialização da página -->
+    <script>
+        // 5 INICIALIZAÇÃO DA PÁGINA
+        // 5.1 Verificar sessão e perfil ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            
+            // 5.1.1 Verificar se há sessão ativa
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 5.1.2 Verificar se é admin (apenas admin pode cadastrar usuários)
+            if (sessao.perfil !== 'admin') {
+                exibirErroUsuario('Acesso negado. Apenas administradores podem cadastrar usuários.');
+                document.getElementById('formAddUsuario').style.display = 'none';
+                return;
+            }
+            
+            // 5.1.3 Inicializar máscara de CPF
+            const inputCpf = document.getElementById('cpf');
+            inputCpf.addEventListener('input', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length <= 11) {
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    e.target.value = valor;
+                }
+            });
+            
+            // 5.1.4 Toggle visibilidade da senha
+            const btnVerSenha = document.getElementById('btnVerSenha');
+            const inputSenha = document.getElementById('senha');
+            btnVerSenha.addEventListener('click', function() {
+                const tipo = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputSenha.setAttribute('type', tipo);
+                const icone = btnVerSenha.querySelector('i');
+                icone.className = tipo === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
+            });
+            
+            // 5.1.5 Verificar força da senha
+            inputSenha.addEventListener('input', function() {
+                const forca = verificarForcaSenha(inputSenha.value);
+                const container = document.getElementById('forcaSenhaContainer');
+                const barra = document.getElementById('barraForcaSenha');
+                const texto = document.getElementById('textoForcaSenha');
+                
+                if (inputSenha.value.length > 0) {
+                    container.style.display = '';
+                    barra.style.width = forca.porcentagem + '%';
+                    barra.className = 'progress-bar ' + forca.classe;
+                    texto.textContent = forca.texto;
+                    texto.className = 'ms-2 small fw-semibold ' + forca.classe.replace('bg-', 'text-');
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // 5.1.6 Configurar submit do formulário
+            const form = document.getElementById('formAddUsuario');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                cadastrarUsuario();
+            });
+        });
+        
+        // 6 FUNÇÃO AUXILIAR DE FORÇA DA SENHA
+        // 6.1 Verificar complexidade da senha
+        function verificarForcaSenha(senha) {
+            let forca = 0;
+            
+            if (senha.length >= 6) forca++;
+            if (senha.length >= 8) forca++;
+            if (/[a-z]/.test(senha) && /[A-Z]/.test(senha)) forca++;
+            if (/\d/.test(senha)) forca++;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(senha)) forca++;
+            
+            if (forca <= 2) return { porcentagem: 33, texto: 'Fraca', classe: 'bg-danger' };
+            if (forca <= 3) return { porcentagem: 66, texto: 'Média', classe: 'bg-warning' };
+            return { porcentagem: 100, texto: 'Forte', classe: 'bg-success' };
+        }
+    </script>
+
+</body>
+</html>

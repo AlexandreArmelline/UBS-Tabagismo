@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Botão Voltar -->
+            <a href="menu.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Voltar ao Menu
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        
+        <!-- 3.1 CABEÇALHO DA PÁGINA -->
+        <div class="text-center mb-5">
+            <div class="icone-ferramenta bg-danger bg-opacity-10 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                <i class="bi bi-bar-chart-fill text-danger" style="font-size: 2rem;"></i>
+            </div>
+            <h3 class="fw-bold text-danger">Dashboard</h3>
+            <p class="text-muted small">Indicadores e Análises do Grupo de Tabagismo</p>
+            <hr class="w-25 mx-auto" style="border-color: #dc3545; border-width: 2px;">
+        </div>
+        
+        <!-- 3.2 CARDS DE INDICADORES PRINCIPAIS (KPI) -->
+        <div class="row g-4 mb-4">
+            
+            <!-- 3.2.1 Total de Pacientes -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-primary bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-people-fill text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-primary mb-1" id="kpiTotalPacientes">0</h2>
+                        <p class="text-muted small mb-0">Total de Pacientes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.2.2 Pacientes Ativos -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-success bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-check-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-success mb-1" id="kpiPacientesAtivos">0</h2>
+                        <p class="text-muted small mb-0">Pacientes Ativos</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.2.3 Taxa de Cessação -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-info bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-graph-up-arrow text-info" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-info mb-1" id="kpiTaxaCessacao">0%</h2>
+                        <p class="text-muted small mb-0">Taxa de Cessação</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.2.4 Total de Registros -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 card-kpi">
+                    <div class="card-body text-center p-3">
+                        <div class="icone-kpi bg-warning bg-opacity-10 rounded-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="bi bi-clipboard2-pulse-fill text-warning" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-warning mb-1" id="kpiTotalRegistros">0</h2>
+                        <p class="text-muted small mb-0">Total de Registros</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 3.3 GRÁFICOS E TABELAS -->
+        <div class="row g-4">
+            
+            <!-- 3.3.1 Card: Status do Tabagismo (Gráfico de Barras Simples) -->
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header bg-white rounded-top-4 border-0">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-pie-chart-fill me-2 text-danger"></i>Status do Tabagismo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-around align-items-end" style="height: 200px;">
+                            
+                            <!-- 3.3.1.1 Barra: Fumam -->
+                            <div class="text-center">
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="fw-bold fs-4 text-danger" id="graficoContagemFumam">0</span>
+                                    <div id="barraFumam" class="bg-danger rounded-top" style="width: 80px; height: 0px; transition: height 0.5s ease;"></div>
+                                </div>
+                                <small class="text-muted mt-2">Fumam</small>
+                            </div>
+                            
+                            <!-- 3.3.1.2 Barra: Não Fumam -->
+                            <div class="text-center">
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="fw-bold fs-4 text-success" id="graficoContagemNaoFumam">0</span>
+                                    <div id="barraNaoFumam" class="bg-success rounded-top" style="width: 80px; height: 0px; transition: height 0.5s ease;"></div>
+                                </div>
+                                <small class="text-muted mt-2">Não Fumam</small>
+                            </div>
+                            
+                            <!-- 3.3.1.3 Barra: Sem Registro -->
+                            <div class="text-center">
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="fw-bold fs-4 text-secondary" id="graficoContagemSemRegistro">0</span>
+                                    <div id="barraSemRegistro" class="bg-secondary rounded-top" style="width: 80px; height: 0px; transition: height 0.5s ease;"></div>
+                                </div>
+                                <small class="text-muted mt-2">Sem Registro</small>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.3.2 Card: Medicamentos Utilizados -->
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header bg-white rounded-top-4 border-0">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-capsule me-2 text-primary"></i>Medicamentos Utilizados
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Medicamento</th>
+                                        <th class="text-center">Pacientes</th>
+                                        <th class="text-center pe-4">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaMedicamentos">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox me-1"></i>Nenhum dado disponível.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.3.3 Card: Últimos Registros -->
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-white rounded-top-4 border-0 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-clock-history me-2 text-info"></i>Últimos Registros
+                        </h5>
+                        <span class="badge bg-info rounded-pill" id="badgeTotalRegistros">0 registros</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Paciente</th>
+                                        <th>Data</th>
+                                        <th>Profissional</th>
+                                        <th>Peso</th>
+                                        <th>Fuma</th>
+                                        <th>Dias s/ Fumar</th>
+                                        <th class="pe-4">Recaídas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaUltimosRegistros">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.3.4 Card: Pacientes por Tempo de Adesão -->
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header bg-white rounded-top-4 border-0">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-calendar-range me-2 text-success"></i>Pacientes por Tempo de Adesão
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Período</th>
+                                        <th class="text-center pe-4">Pacientes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaTempoAdesao">
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox me-1"></i>Nenhum dado disponível.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3.3.5 Card: Média de Cigarros/Dia -->
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header bg-white rounded-top-4 border-0">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-slash-circle me-2 text-warning"></i>Média de Cigarros/Dia (Quem Ainda Fuma)
+                        </h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h1 class="display-3 fw-bold text-warning" id="mediaCigarros">0</h1>
+                        <p class="text-muted">cigarros por dia (média entre fumantes ativos)</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 3.4 RODAPÉ -->
+        <div class="text-center mt-5">
+            <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i>Dados atualizados com base nos registros do sistema
+            </small>
+        </div>
+        
+    </div>
+
+    <!-- 4 SCRIPTS -->
+    <!-- 4.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4.2 Script de inicialização do dashboard -->
+    <script>
+        // 5 INICIALIZAÇÃO DA PÁGINA
+        // 5.1 Verificar sessão ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 5.1.1 Carregar todos os indicadores
+            carregarDashboard();
+        });
+        
+        // 6 FUNÇÕES PRINCIPAIS DO DASHBOARD
+        // 6.1 Carregar todos os dados do dashboard
+        function carregarDashboard() {
+            carregarKPIs();
+            carregarGraficoStatusTabagismo();
+            carregarTabelaMedicamentos();
+            carregarUltimosRegistros();
+            carregarTempoAdesao();
+            carregarMediaCigarros();
+        }
+        
+        // 6.2 Carregar cards KPI principais
+        function carregarKPIs() {
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            
+            // 6.2.1 Total de pacientes
+            document.getElementById('kpiTotalPacientes').textContent = pacientes.length;
+            
+            // 6.2.2 Pacientes ativos
+            const ativos = pacientes.filter(p => p.ativo !== false).length;
+            document.getElementById('kpiPacientesAtivos').textContent = ativos;
+            
+            // 6.2.3 Taxa de cessação (último registro de cada paciente = não fuma)
+            const pacientesComRegistro = pacientes.filter(p => {
+                const registrosPaciente = registros.filter(r => r.id_paciente === p.id);
+                return registrosPaciente.length > 0;
+            });
+            
+            if (pacientesComRegistro.length > 0) {
+                let pararam = 0;
+                pacientesComRegistro.forEach(p => {
+                    const registrosPaciente = registros
+                        .filter(r => r.id_paciente === p.id)
+                        .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
+                    
+                    if (registrosPaciente[0] && registrosPaciente[0].fumaAtualmente === 'nao') {
+                        pararam++;
+                    }
+                });
+                const taxa = Math.round((pararam / pacientesComRegistro.length) * 100);
+                document.getElementById('kpiTaxaCessacao').textContent = taxa + '%';
+            }
+            
+            // 6.2.4 Total de registros
+            document.getElementById('kpiTotalRegistros').textContent = registros.length;
+        }
+        
+        // 6.3 Carregar gráfico de status do tabagismo
+        function carregarGraficoStatusTabagismo() {
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            
+            let fumam = 0;
+            let naoFumam = 0;
+            let semRegistro = 0;
+            
+            pacientes.forEach(p => {
+                const registrosPaciente = registros
+                    .filter(r => r.id_paciente === p.id)
+                    .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
+                
+                if (registrosPaciente.length === 0) {
+                    semRegistro++;
+                } else if (registrosPaciente[0].fumaAtualmente === 'sim') {
+                    fumam++;
+                } else if (registrosPaciente[0].fumaAtualmente === 'nao') {
+                    naoFumam++;
+                } else {
+                    semRegistro++;
+                }
+            });
+            
+            const total = pacientes.length || 1;
+            const maxAltura = 150;
+            
+            document.getElementById('graficoContagemFumam').textContent = fumam;
+            document.getElementById('graficoContagemNaoFumam').textContent = naoFumam;
+            document.getElementById('graficoContagemSemRegistro').textContent = semRegistro;
+            
+            document.getElementById('barraFumam').style.height = (fumam / total * maxAltura) + 'px';
+            document.getElementById('barraNaoFumam').style.height = (naoFumam / total * maxAltura) + 'px';
+            document.getElementById('barraSemRegistro').style.height = (semRegistro / total * maxAltura) + 'px';
+        }
+        
+        // 6.4 Carregar tabela de medicamentos
+        function carregarTabelaMedicamentos() {
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const contagem = {};
+            let totalComMedicamento = 0;
+            
+            registros.forEach(r => {
+                if (r.medicamento) {
+                    contagem[r.medicamento] = (contagem[r.medicamento] || 0) + 1;
+                    totalComMedicamento++;
+                }
+            });
+            
+            const tabela = document.getElementById('tabelaMedicamentos');
+            
+            if (Object.keys(contagem).length === 0) {
+                tabela.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhum dado disponível.</td></tr>`;
+                return;
+            }
+            
+            const medicamentosOrdenados = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+            
+            tabela.innerHTML = medicamentosOrdenados.map(([med, qtd]) => `
+                <tr>
+                    <td class="ps-4">${traduzirMedicamento(med)}</td>
+                    <td class="text-center">${qtd}</td>
+                    <td class="text-center pe-4">${Math.round((qtd / totalComMedicamento) * 100)}%</td>
+                </tr>
+            `).join('');
+        }
+        
+        // 6.5 Carregar últimos registros
+        function carregarUltimosRegistros() {
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            
+            const ultimos = registros
+                .sort((a, b) => new Date(b.dataHoraRegistro) - new Date(a.dataHoraRegistro))
+                .slice(0, 10);
+            
+            document.getElementById('badgeTotalRegistros').textContent = registros.length + ' registros';
+            
+            const tabela = document.getElementById('tabelaUltimosRegistros');
+            
+            if (ultimos.length === 0) {
+                tabela.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado.</td></tr>`;
+                return;
+            }
+            
+            tabela.innerHTML = ultimos.map(r => {
+                const paciente = pacientes.find(p => p.id === r.id_paciente);
+                return `
+                    <tr>
+                        <td class="ps-4 fw-semibold">${paciente ? paciente.nomeCompleto : 'Desconhecido'}</td>
+                        <td>${formatarData(r.dataAtendimento)}</td>
+                        <td><small>${r.nome_usuario || '-'}</small></td>
+                        <td>${r.peso || '-'} kg</td>
+                        <td>
+                            <span class="badge ${r.fumaAtualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">
+                                ${r.fumaAtualmente === 'sim' ? 'Sim' : 'Não'}
+                            </span>
+                        </td>
+                        <td>${r.diasSemFumar || '0'}</td>
+                        <td class="pe-4">${r.recaidas || '0'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 6.6 Carregar pacientes por tempo de adesão
+        function carregarTempoAdesao() {
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            const hoje = new Date();
+            
+            const periodos = {
+                'Até 3 meses': 0,
+                '3 a 6 meses': 0,
+                '6 a 12 meses': 0,
+                'Mais de 12 meses': 0
+            };
+            
+            pacientes.forEach(p => {
+                if (!p.dataAdesao) return;
+                const adesao = new Date(p.dataAdesao + 'T00:00:00');
+                const diffMeses = (hoje.getFullYear() - adesao.getFullYear()) * 12 + (hoje.getMonth() - adesao.getMonth());
+                
+                if (diffMeses <= 3) periodos['Até 3 meses']++;
+                else if (diffMeses <= 6) periodos['3 a 6 meses']++;
+                else if (diffMeses <= 12) periodos['6 a 12 meses']++;
+                else periodos['Mais de 12 meses']++;
+            });
+            
+            const tabela = document.getElementById('tabelaTempoAdesao');
+            tabela.innerHTML = Object.entries(periodos).map(([periodo, qtd]) => `
+                <tr>
+                    <td class="ps-4">${periodo}</td>
+                    <td class="text-center pe-4 fw-bold">${qtd}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // 6.7 Carregar média de cigarros/dia
+        function carregarMediaCigarros() {
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            
+            let soma = 0;
+            let contagem = 0;
+            
+            pacientes.forEach(p => {
+                const registrosPaciente = registros
+                    .filter(r => r.id_paciente === p.id)
+                    .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
+                
+                if (registrosPaciente.length > 0 && 
+                    registrosPaciente[0].fumaAtualmente === 'sim' && 
+                    registrosPaciente[0].quantidadeCigarros) {
+                    soma += parseInt(registrosPaciente[0].quantidadeCigarros);
+                    contagem++;
+                }
+            });
+            
+            const media = contagem > 0 ? Math.round(soma / contagem) : 0;
+            document.getElementById('mediaCigarros').textContent = media;
+        }
+        
+        // 7 FUNÇÕES AUXILIARES
+        // 7.1 Formatar data
+        function formatarData(dataISO) {
+            if (!dataISO) return '-';
+            const data = new Date(dataISO + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        // 7.2 Traduzir medicamento
+        function traduzirMedicamento(valor) {
+            const mapa = {
+                'adesivo': 'Adesivo de Nicotina',
+                'goma': 'Goma de Mascar',
+                'bupropiona': 'Bupropiona',
+                'vareniclina': 'Vareniclina',
+                'pastilha': 'Pastilha de Nicotina',
+                'outro': 'Outro'
+            };
+            return mapa[valor] || valor;
+        }
+    </script>
+
+</body>
+</html>

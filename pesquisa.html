@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisar Pacientes - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Botão Voltar -->
+            <a href="menu.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Voltar ao Menu
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                
+                <!-- 3.1 CABEÇALHO DA PÁGINA -->
+                <div class="text-center mb-4">
+                    <div class="icone-ferramenta bg-warning bg-opacity-10 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-search text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="fw-bold text-warning">Pesquisar Pacientes</h3>
+                    <p class="text-muted small">Busque pacientes cadastrados no Grupo de Tabagismo</p>
+                </div>
+                
+                <!-- 3.2 CARD DE PESQUISA -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        
+                        <!-- 3.2.1 Formulário de Pesquisa -->
+                        <form id="formPesquisa" novalidate>
+                            <div class="row g-3 align-items-end">
+                                
+                                <!-- 3.2.2 Campo de Busca -->
+                                <div class="col-12 col-md-5">
+                                    <label for="termoBusca" class="form-label fw-semibold">
+                                        <i class="bi bi-search me-1 text-warning"></i>Nome ou CPF
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control form-control-lg" 
+                                        id="termoBusca" 
+                                        placeholder="Digite o nome ou CPF do paciente"
+                                        required
+                                    >
+                                </div>
+                                
+                                <!-- 3.2.3 Filtro de Status -->
+                                <div class="col-6 col-md-3">
+                                    <label for="filtroStatus" class="form-label fw-semibold">
+                                        <i class="bi bi-funnel-fill me-1 text-warning"></i>Status
+                                    </label>
+                                    <select class="form-select" id="filtroStatus">
+                                        <option value="todos">Todos</option>
+                                        <option value="ativo">Ativos</option>
+                                        <option value="inativo">Inativos</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 3.2.4 Botão Pesquisar -->
+                                <div class="col-6 col-md-2">
+                                    <button type="submit" class="btn btn-warning text-white fw-semibold w-100">
+                                        <i class="bi bi-search me-1"></i>Buscar
+                                    </button>
+                                </div>
+                                
+                                <!-- 3.2.5 Botão Limpar -->
+                                <div class="col-6 col-md-2">
+                                    <button type="button" class="btn btn-outline-secondary w-100" id="btnLimpar" onclick="limparPesquisa()">
+                                        <i class="bi bi-eraser-fill me-1"></i>Limpar
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+                
+                <!-- 3.3 RESULTADOS DA PESQUISA -->
+                <div id="areaResultados" style="display: none;">
+                    
+                    <!-- 3.3.1 Cabeçalho dos Resultados -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-list-ul me-2 text-warning"></i>Resultados
+                        </h5>
+                        <small id="contadorResultados" class="text-muted"></small>
+                    </div>
+                    
+                    <!-- 3.3.2 Tabela de Resultados (Desktop) -->
+                    <div class="card shadow-sm border-0 rounded-4 d-none d-md-block">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th class="ps-4">Nome</th>
+                                        <th>CPF</th>
+                                        <th>Telefone</th>
+                                        <th>Data Adesão</th>
+                                        <th>Status</th>
+                                        <th class="text-center pe-4">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaResultados">
+                                    <!-- Preenchido via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 3.3.3 Cards de Resultados (Mobile) -->
+                    <div id="cardsResultados" class="d-md-none">
+                        <!-- Preenchido via JS -->
+                    </div>
+                    
+                    <!-- 3.3.4 Mensagem de Nenhum Resultado -->
+                    <div id="msgSemResultados" class="text-center py-5" style="display: none;">
+                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-3">Nenhum paciente encontrado com os critérios informados.</p>
+                    </div>
+                    
+                </div>
+                
+                <!-- 3.4 MENSAGEM DE FEEDBACK -->
+                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 SCRIPTS -->
+    <!-- 4.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4.2 Script de inicialização da página -->
+    <script>
+        // 5 INICIALIZAÇÃO DA PÁGINA
+        // 5.1 Verificar sessão ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessao = JSON.parse(localStorage.getItem('sessao'));
+            if (!sessao) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 5.1.1 Configurar submit do formulário
+            const form = document.getElementById('formPesquisa');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                realizarPesquisa();
+            });
+            
+            // 5.1.2 Pesquisa automática ao digitar (com delay)
+            let timeoutPesquisa;
+            document.getElementById('termoBusca').addEventListener('input', function() {
+                clearTimeout(timeoutPesquisa);
+                timeoutPesquisa = setTimeout(realizarPesquisa, 500);
+            });
+            
+            // 5.1.3 Pesquisa ao mudar filtro
+            document.getElementById('filtroStatus').addEventListener('change', realizarPesquisa);
+            
+            // 5.1.4 Foco no campo de busca
+            document.getElementById('termoBusca').focus();
+        });
+        
+        // 6 FUNÇÕES DE PESQUISA E EXIBIÇÃO
+        // 6.1 Realizar a pesquisa nos dados
+        function realizarPesquisa() {
+            const termo = document.getElementById('termoBusca').value.trim().toLowerCase();
+            const filtroStatus = document.getElementById('filtroStatus').value;
+            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+            
+            // Filtra pacientes
+            let resultados = pacientes.filter(p => {
+                const matchTermo = !termo || 
+                    p.nomeCompleto.toLowerCase().includes(termo) || 
+                    p.cpf.includes(termo);
+                
+                const matchStatus = filtroStatus === 'todos' || 
+                    (filtroStatus === 'ativo' && p.ativo) || 
+                    (filtroStatus === 'inativo' && !p.ativo);
+                
+                return matchTermo && matchStatus;
+            });
+            
+            // Ordena por nome
+            resultados.sort((a, b) => a.nomeCompleto.localeCompare(b.nomeCompleto));
+            
+            // Exibe resultados
+            exibirResultados(resultados);
+        }
+        
+        // 6.2 Exibir resultados na tabela e cards
+        function exibirResultados(resultados) {
+            const areaResultados = document.getElementById('areaResultados');
+            const tabelaResultados = document.getElementById('tabelaResultados');
+            const cardsResultados = document.getElementById('cardsResultados');
+            const msgSemResultados = document.getElementById('msgSemResultados');
+            const contador = document.getElementById('contadorResultados');
+            
+            // Mostrar área de resultados
+            areaResultados.style.display = '';
+            
+            // Atualizar contador
+            contador.textContent = `${resultados.length} paciente(s) encontrado(s)`;
+            
+            if (resultados.length === 0) {
+                // 6.2.1 Nenhum resultado
+                tabelaResultados.innerHTML = '';
+                cardsResultados.innerHTML = '';
+                msgSemResultados.style.display = '';
+            } else {
+                msgSemResultados.style.display = 'none';
+                
+                // 6.2.2 Preencher tabela (desktop)
+                tabelaResultados.innerHTML = resultados.map(p => `
+                    <tr>
+                        <td class="ps-4 fw-semibold">${p.nomeCompleto}</td>
+                        <td>${p.cpf}</td>
+                        <td>${p.telefone || '-'}</td>
+                        <td>${formatarData(p.dataAdesao)}</td>
+                        <td>
+                            <span class="badge ${p.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">
+                                ${p.ativo ? 'Ativo' : 'Inativo'}
+                            </span>
+                        </td>
+                        <td class="text-center pe-4">
+                            <button class="btn btn-sm btn-outline-success me-1" onclick="verDetalhes(${p.id})" title="Ver detalhes">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editarPaciente(${p.id})" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // 6.2.3 Preencher cards (mobile)
+                cardsResultados.innerHTML = resultados.map(p => `
+                    <div class="card shadow-sm border-0 rounded-4 mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="fw-bold mb-0">${p.nomeCompleto}</h6>
+                                <span class="badge ${p.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">
+                                    ${p.ativo ? 'Ativo' : 'Inativo'}
+                                </span>
+                            </div>
+                            <p class="small text-muted mb-1">
+                                <i class="bi bi-person-vcard me-1"></i>${p.cpf}
+                            </p>
+                            <p class="small text-muted mb-1">
+                                <i class="bi bi-telephone me-1"></i>${p.telefone || 'Não informado'}
+                            </p>
+                            <p class="small text-muted mb-2">
+                                <i class="bi bi-calendar-check me-1"></i>Adesão: ${formatarData(p.dataAdesao)}
+                            </p>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-success" onclick="verDetalhes(${p.id})">
+                                    <i class="bi bi-eye-fill me-1"></i>Ver
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="editarPaciente(${p.id})">
+                                    <i class="bi bi-pencil-fill me-1"></i>Editar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // 7 FUNÇÕES AUXILIARES
+        // 7.1 Formatar data para exibição
+        function formatarData(dataISO) {
+            if (!dataISO) return '-';
+            const data = new Date(dataISO + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        // 7.2 Ver detalhes do paciente
+        function verDetalhes(id) {
+            window.location.href = `registro-clinico.html?id=${id}`;
+        }
+        
+        // 7.3 Editar paciente
+        function editarPaciente(id) {
+            window.location.href = `add-paciente.html?editar=${id}`;
+        }
+        
+        // 7.4 Limpar pesquisa
+        function limparPesquisa() {
+            document.getElementById('termoBusca').value = '';
+            document.getElementById('filtroStatus').value = 'todos';
+            document.getElementById('areaResultados').style.display = 'none';
+            document.getElementById('termoBusca').focus();
+        }
+    </script>
+
+</body>
+</html>

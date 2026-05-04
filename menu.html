@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal - UBS Ipiranga</title>
+    
+    <!-- 1 BIBLIOTECAS E DEPENDÊNCIAS -->
+    <!-- 1.1 Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 1.2 Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 1.3 CSS Personalizado -->
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+<body class="bg-light">
+
+    <!-- 2 BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            
+            <!-- 2.1 Logo e nome do sistema -->
+            <a class="navbar-brand fw-bold" href="menu.html">
+                <i class="bi bi-hospital me-2"></i>UBS Ipiranga
+            </a>
+            
+            <!-- 2.2 Informações do usuário logado -->
+            <div class="d-flex align-items-center text-white">
+                <span id="nomeUsuario" class="me-3 small d-none d-md-inline">
+                    <i class="bi bi-person-circle me-1"></i>Carregando...
+                </span>
+                
+                <!-- 2.2.1 Botão Logout -->
+                <button class="btn btn-outline-light btn-sm" onclick="logout()" title="Sair do sistema">
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    <span class="d-none d-md-inline">Sair</span>
+                </button>
+            </div>
+            
+        </div>
+    </nav>
+
+    <!-- 3 CONTAINER PRINCIPAL -->
+    <div class="container py-5">
+        
+        <!-- 3.1 CABEÇALHO DA PÁGINA -->
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-success">
+                <i class="bi bi-grid-fill me-2"></i>Menu Principal
+            </h2>
+            <p class="text-muted">Grupo de Tabagismo - Selecione a ferramenta desejada</p>
+            <hr class="w-25 mx-auto" style="border-color: var(--cor-primaria); border-width: 2px;">
+        </div>
+        
+        <!-- 3.2 CARDS DE FERRAMENTAS -->
+        <div class="row g-4 justify-content-center">
+            
+            <!-- 3.2.1 Card Add Paciente -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="add-paciente.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-success bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-person-plus-fill text-success" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Adicionar Paciente</h5>
+                            <p class="card-text text-muted small">
+                                Cadastre novos pacientes no grupo de tabagismo
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 3.2.2 Card Add Usuário -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="add-usuario.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-primary bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-person-badge-fill text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Adicionar Usuário</h5>
+                            <p class="card-text text-muted small">
+                                Cadastre profissionais que acessarão o sistema
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 3.2.3 Card Pesquisar -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="pesquisa.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-warning bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-search text-warning" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Pesquisar</h5>
+                            <p class="card-text text-muted small">
+                                Busque pacientes cadastrados por nome ou CPF
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 3.2.4 Card Registro Clínico -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="registro-clinico.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-info bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-clipboard2-pulse-fill text-info" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Registro Clínico</h5>
+                            <p class="card-text text-muted small">
+                                Registre indicadores e evolução dos pacientes
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 3.2.5 Card Dashboard -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="dashboard.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-danger bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-bar-chart-fill text-danger" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Dashboard</h5>
+                            <p class="card-text text-muted small">
+                                Visualize indicadores e análises do grupo
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- 3.2.6 Card Admin (visível apenas para administradores) -->
+            <div class="col-12 col-md-6 col-lg-4" id="cardAdmin" style="display: none;">
+                <a href="admin.html" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 card-ferramenta">
+                        <div class="card-body text-center p-4">
+                            <div class="icone-ferramenta bg-dark bg-opacity-10 rounded-circle mx-auto mb-3">
+                                <i class="bi bi-gear-fill text-dark" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5 class="card-title fw-bold text-dark">Administração</h5>
+                            <p class="card-text text-muted small">
+                                Gerencie usuários e configurações do sistema
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+        
+        <!-- 3.3 RODAPÉ INFORMATIVO -->
+        <div class="text-center mt-5">
+            <small class="text-muted">
+                v1.0 - UNIVESP Projeto Integrador &copy; 2026
+            </small>
+        </div>
+        
+    </div>
+
+    <!-- 4 SCRIPTS -->
+    <!-- 4.1 Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4.2 App JS (Autenticação e Navegação) -->
+    <script src="js/app.js"></script>
+    
+    <!-- 4.3 Script específico do menu -->
+    <script>
+        // 5 INICIALIZAÇÃO DO MENU
+// 5.1 Carregar dados do usuário da sessão
+document.addEventListener('DOMContentLoaded', function() {
+    const sessao = JSON.parse(localStorage.getItem('sessao'));
+    
+    // 5.1.1 Verificar se há sessão ativa
+    if (!sessao) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // 5.1.2 Exibir nome do usuário
+    const nomeUsuario = document.getElementById('nomeUsuario');
+    if (nomeUsuario && sessao.nome) {
+        nomeUsuario.innerHTML = `<i class="bi bi-person-circle me-1"></i>${sessao.nome}`;
+    }
+    
+    // 5.1.3 Mostrar card de administração se perfil for admin
+    if (sessao.perfil === 'admin') {
+        const cardAdmin = document.getElementById('cardAdmin');
+        if (cardAdmin) {
+            cardAdmin.style.display = '';
+        }
+    }
+});
+    </script>
+
+</body>
+</html>
