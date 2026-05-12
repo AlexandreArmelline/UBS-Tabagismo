@@ -345,48 +345,36 @@
     
     <!-- 4.3 Script de inicialização da página -->
     <script>
-        // 5 INICIALIZAÇÃO DA PÁGINA
-        // 5.1 Variável global do paciente atual
-        let pacienteAtual = null;
-        
-        // 5.2 Verificar sessão e carregar dados ao iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            const sessao = JSON.parse(localStorage.getItem('sessao'));
-            if (!sessao) {
+       let pacienteAtual = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            if (!usuario || !sessionStorage.getItem('token')) {
                 window.location.href = 'index.html';
                 return;
             }
-            
-            // 5.2.1 Obter ID do paciente pela URL
+
             const urlParams = new URLSearchParams(window.location.search);
             const idPaciente = urlParams.get('id');
-            
+
             if (!idPaciente) {
                 window.location.href = 'pesquisa.html';
                 return;
             }
-            
-            // 5.2.2 Carregar dados do paciente
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            pacienteAtual = pacientes.find(p => p.id === parseInt(idPaciente));
-            
+
+            pacienteAtual = await buscarPacientePorId(idPaciente);
             if (!pacienteAtual) {
                 window.location.href = 'pesquisa.html';
                 return;
             }
-            
-            // 5.2.3 Exibir dados do paciente
+
             carregarDadosPaciente();
-            
-            // 5.2.4 Carregar histórico
             carregarHistorico();
-            
-            // 5.2.5 Configurar data atual como padrão
+
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById('dataAtendimento').value = hoje;
             document.getElementById('dataAtendimento').setAttribute('max', hoje);
-            
-            // 5.2.6 Mostrar/esconder campo cigarros conforme status
+
             document.querySelectorAll('input[name="fumaAtualmente"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     const campo = document.getElementById('campoQuantidadeCigarros');
@@ -396,171 +384,89 @@
                     }
                 });
             });
-            
-            // 5.2.7 Configurar submit do formulário
-            const form = document.getElementById('formRegistroClinico');
-            form.addEventListener('submit', function(e) {
+
+            document.getElementById('formRegistroClinico').addEventListener('submit', function(e) {
                 e.preventDefault();
                 salvarRegistroClinico();
             });
         });
-        
-        // 6 FUNÇÕES DE EXIBIÇÃO DE DADOS
-        // 6.1 Carregar dados do paciente nos cards
+
         function carregarDadosPaciente() {
             if (!pacienteAtual) return;
-            
-            document.getElementById('subtituloPagina').textContent = 'Registro de indicadores e evolução do paciente';
-            document.getElementById('nomePacienteCabecalho').textContent = pacienteAtual.nomeCompleto;
+            document.getElementById('nomePacienteCabecalho').textContent = pacienteAtual.nome_completo;
             document.getElementById('infoCpf').textContent = pacienteAtual.cpf;
-            document.getElementById('infoNascimento').textContent = formatarData(pacienteAtual.dataNascimento);
+            document.getElementById('infoNascimento').textContent = pacienteAtual.data_nascimento ? new Date(pacienteAtual.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
             document.getElementById('infoTelefone').textContent = pacienteAtual.telefone || 'Não informado';
-            document.getElementById('infoAdesao').textContent = formatarData(pacienteAtual.dataAdesao);
-            
+            document.getElementById('infoAdesao').textContent = pacienteAtual.data_adesao ? new Date(pacienteAtual.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
             document.getElementById('cardPaciente').style.display = '';
             document.getElementById('cardFormulario').style.display = '';
             document.getElementById('cardHistorico').style.display = '';
         }
-        
-        // 6.2 Carregar histórico de registros
-        function carregarHistorico() {
+
+        async function carregarHistorico() {
             if (!pacienteAtual) return;
-            
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            const historico = registros
-                .filter(r => r.id_paciente === pacienteAtual.id)
-                .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
-            
+            const historico = await buscarRegistrosPorPaciente(pacienteAtual.id);
             const tabela = document.getElementById('tabelaHistorico');
-            
+
             if (historico.length === 0) {
-                tabela.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado para este paciente.
-                        </td>
-                    </tr>`;
+                tabela.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado.</td></tr>`;
                 return;
             }
-            
+
             tabela.innerHTML = historico.map(r => `
                 <tr>
-                    <td class="ps-4">${formatarData(r.dataAtendimento)}</td>
+                    <td class="ps-4">${new Date(r.data_atendimento + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
                     <td>${r.peso || '-'} kg</td>
-                    <td>${r.pressaoSistolica || '-'}/${r.pressaoDiastolica || '-'} mmHg</td>
-                    <td>
-                        <span class="badge ${r.fumaAtualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">
-                            ${r.fumaAtualmente === 'sim' ? 'Sim' : 'Não'}
-                        </span>
-                    </td>
-                    <td>${r.quantidadeCigarros || '-'}</td>
-                    <td class="pe-4">${traduzirMedicamento(r.medicamento) || '-'}</td>
+                    <td>${r.pressao_sistolica || '-'}/${r.pressao_diastolica || '-'} mmHg</td>
+                    <td><span class="badge ${r.fuma_atualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">${r.fuma_atualmente === 'sim' ? 'Sim' : 'Não'}</span></td>
+                    <td>${r.quantidade_cigarros || '-'}</td>
+                    <td class="pe-4">${r.medicamento || '-'}</td>
                 </tr>
             `).join('');
         }
-        
-        // 7 FUNÇÕES AUXILIARES
-        // 7.1 Formatar data
-        function formatarData(dataISO) {
-            if (!dataISO) return '-';
-            const data = new Date(dataISO + 'T00:00:00');
-            return data.toLocaleDateString('pt-BR');
-        }
-        
-        // 7.2 Traduzir medicamento
-        function traduzirMedicamento(valor) {
-            const mapa = {
-                'adesivo': 'Adesivo de Nicotina',
-                'goma': 'Goma de Mascar',
-                'bupropiona': 'Bupropiona',
-                'vareniclina': 'Vareniclina',
-                'pastilha': 'Pastilha de Nicotina',
-                'outro': 'Outro'
+
+        async function salvarRegistroClinico() {
+            const dados = {
+                id_paciente: pacienteAtual.id,
+                data_atendimento: document.getElementById('dataAtendimento').value,
+                peso: document.getElementById('peso').value || null,
+                pressao_sistolica: document.getElementById('pressaoSistolica').value || null,
+                pressao_diastolica: document.getElementById('pressaoDiastolica').value || null,
+                fuma_atualmente: document.querySelector('input[name="fumaAtualmente"]:checked')?.value || '',
+                quantidade_cigarros: document.getElementById('quantidadeCigarros').value || null,
+                medicamento: document.getElementById('medicamento').value || null,
+                dias_sem_fumar: document.getElementById('diasSemFumar').value || null,
+                recaidas: document.getElementById('recaidas').value || null,
+                gatilhos: document.getElementById('gatilhos').value.trim() || null,
+                hobbies: document.getElementById('hobbies').value.trim() || null,
+                ambiente_familiar: document.getElementById('ambienteFamiliar').value || null,
+                observacoes_clinicas: document.getElementById('observacoesClinicas').value.trim() || null
             };
-            return mapa[valor] || valor;
-        }
-        
-        // 7.3 Obter próximo ID de registro
-        function obterProximoIdRegistro() {
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            if (registros.length === 0) return 1;
-            return Math.max(...registros.map(r => r.id)) + 1;
-        }
-        
-        // 8 FUNÇÃO DE SALVAR REGISTRO
-        // 8.1 Salvar registro clínico
-        function salvarRegistroClinico() {
-            const sessao = JSON.parse(localStorage.getItem('sessao'));
-            
-            const dataAtendimento = document.getElementById('dataAtendimento').value;
-            const peso = document.getElementById('peso').value;
-            const pressaoSistolica = document.getElementById('pressaoSistolica').value;
-            const pressaoDiastolica = document.getElementById('pressaoDiastolica').value;
-            const fumaAtualmente = document.querySelector('input[name="fumaAtualmente"]:checked')?.value || '';
-            const quantidadeCigarros = document.getElementById('quantidadeCigarros').value;
-            const medicamento = document.getElementById('medicamento').value;
-            const diasSemFumar = document.getElementById('diasSemFumar').value;
-            const recaidas = document.getElementById('recaidas').value;
-            const gatilhos = document.getElementById('gatilhos').value.trim();
-            const hobbies = document.getElementById('hobbies').value.trim();
-            const ambienteFamiliar = document.getElementById('ambienteFamiliar').value;
-            const observacoesClinicas = document.getElementById('observacoesClinicas').value.trim();
-            
-            // 8.1.1 Validar data
-            if (!dataAtendimento) {
-                exibirFeedback('Por favor, informe a data do atendimento.', 'danger');
+
+            if (!dados.data_atendimento || !dados.fuma_atualmente) {
+                exibirFeedback('Preencha data e status do tabagismo.', 'danger');
                 return;
             }
-            
-            // 8.1.2 Montar objeto registro
-            const registro = {
-                id: obterProximoIdRegistro(),
-                id_paciente: pacienteAtual.id,
-                id_usuario: sessao.id,
-                nome_usuario: sessao.nome,
-                dataAtendimento,
-                peso: peso || null,
-                pressaoSistolica: pressaoSistolica || null,
-                pressaoDiastolica: pressaoDiastolica || null,
-                fumaAtualmente,
-                quantidadeCigarros: quantidadeCigarros || null,
-                medicamento,
-                diasSemFumar: diasSemFumar || null,
-                recaidas: recaidas || null,
-                gatilhos,
-                hobbies,
-                ambienteFamiliar,
-                observacoesClinicas,
-                dataHoraRegistro: new Date().toISOString()
-            };
-            
-            // 8.1.3 Salvar no localStorage
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            registros.push(registro);
-            localStorage.setItem('registros', JSON.stringify(registros));
-            
-            // 8.1.4 Feedback e ações
-            exibirFeedback('Registro clínico salvo com sucesso!', 'success');
-            document.getElementById('formRegistroClinico').reset();
-            document.getElementById('dataAtendimento').value = new Date().toISOString().split('T')[0];
-            document.getElementById('campoQuantidadeCigarros').style.display = '';
-            
-            // Atualizar histórico
-            carregarHistorico();
+
+            const resultado = await criarRegistroAPI(dados);
+            if (resultado.sucesso) {
+                exibirFeedback('Registro clínico salvo com sucesso!', 'success');
+                document.getElementById('formRegistroClinico').reset();
+                document.getElementById('dataAtendimento').value = new Date().toISOString().split('T')[0];
+                carregarHistorico();
+            } else {
+                exibirFeedback(resultado.erro, 'danger');
+            }
         }
-        
-        // 9 FUNÇÃO DE FEEDBACK
-        // 9.1 Exibir mensagem de feedback
+
         function exibirFeedback(mensagem, tipo) {
             const msgFeedback = document.getElementById('msgFeedback');
             const icone = tipo === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill';
             msgFeedback.className = `alert alert-${tipo} mt-3 text-center rounded-3`;
             msgFeedback.innerHTML = `<i class="bi bi-${icone} me-1"></i>${mensagem}`;
             msgFeedback.classList.remove('d-none');
-            
-            setTimeout(() => {
-                msgFeedback.classList.add('d-none');
-            }, 5000);
+            setTimeout(() => msgFeedback.classList.add('d-none'), 5000);
         }
     </script>
 

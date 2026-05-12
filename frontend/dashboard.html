@@ -280,251 +280,55 @@
     
     <!-- 4.2 Script de inicialização do dashboard -->
     <script>
-        // 5 INICIALIZAÇÃO DA PÁGINA
-        // 5.1 Verificar sessão ao carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            const sessao = JSON.parse(localStorage.getItem('sessao'));
-            if (!sessao) {
+        document.addEventListener('DOMContentLoaded', async function() {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            if (!usuario || !sessionStorage.getItem('token')) {
                 window.location.href = 'index.html';
                 return;
             }
-            
-            // 5.1.1 Carregar todos os indicadores
-            carregarDashboard();
+
+            await carregarDashboard();
         });
-        
-        // 6 FUNÇÕES PRINCIPAIS DO DASHBOARD
-        // 6.1 Carregar todos os dados do dashboard
-        function carregarDashboard() {
-            carregarKPIs();
-            carregarGraficoStatusTabagismo();
-            carregarTabelaMedicamentos();
-            carregarUltimosRegistros();
-            carregarTempoAdesao();
-            carregarMediaCigarros();
+
+        async function carregarDashboard() {
+            const dados = await buscarDashboardAPI();
+            if (!dados) return;
+
+            document.getElementById('kpiTotalPacientes').textContent = dados.totalPacientes;
+            document.getElementById('kpiPacientesAtivos').textContent = dados.pacientesAtivos;
+            document.getElementById('kpiTaxaCessacao').textContent = dados.taxaCessacao + '%';
+            document.getElementById('kpiTotalRegistros').textContent = dados.totalRegistros;
+
+            await carregarUltimosRegistros();
         }
-        
-        // 6.2 Carregar cards KPI principais
-        function carregarKPIs() {
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            
-            // 6.2.1 Total de pacientes
-            document.getElementById('kpiTotalPacientes').textContent = pacientes.length;
-            
-            // 6.2.2 Pacientes ativos
-            const ativos = pacientes.filter(p => p.ativo !== false).length;
-            document.getElementById('kpiPacientesAtivos').textContent = ativos;
-            
-            // 6.2.3 Taxa de cessação (último registro de cada paciente = não fuma)
-            const pacientesComRegistro = pacientes.filter(p => {
-                const registrosPaciente = registros.filter(r => r.id_paciente === p.id);
-                return registrosPaciente.length > 0;
-            });
-            
-            if (pacientesComRegistro.length > 0) {
-                let pararam = 0;
-                pacientesComRegistro.forEach(p => {
-                    const registrosPaciente = registros
-                        .filter(r => r.id_paciente === p.id)
-                        .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
-                    
-                    if (registrosPaciente[0] && registrosPaciente[0].fumaAtualmente === 'nao') {
-                        pararam++;
-                    }
-                });
-                const taxa = Math.round((pararam / pacientesComRegistro.length) * 100);
-                document.getElementById('kpiTaxaCessacao').textContent = taxa + '%';
-            }
-            
-            // 6.2.4 Total de registros
-            document.getElementById('kpiTotalRegistros').textContent = registros.length;
-        }
-        
-        // 6.3 Carregar gráfico de status do tabagismo
-        function carregarGraficoStatusTabagismo() {
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            
-            let fumam = 0;
-            let naoFumam = 0;
-            let semRegistro = 0;
-            
-            pacientes.forEach(p => {
-                const registrosPaciente = registros
-                    .filter(r => r.id_paciente === p.id)
-                    .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
-                
-                if (registrosPaciente.length === 0) {
-                    semRegistro++;
-                } else if (registrosPaciente[0].fumaAtualmente === 'sim') {
-                    fumam++;
-                } else if (registrosPaciente[0].fumaAtualmente === 'nao') {
-                    naoFumam++;
-                } else {
-                    semRegistro++;
-                }
-            });
-            
-            const total = pacientes.length || 1;
-            const maxAltura = 150;
-            
-            document.getElementById('graficoContagemFumam').textContent = fumam;
-            document.getElementById('graficoContagemNaoFumam').textContent = naoFumam;
-            document.getElementById('graficoContagemSemRegistro').textContent = semRegistro;
-            
-            document.getElementById('barraFumam').style.height = (fumam / total * maxAltura) + 'px';
-            document.getElementById('barraNaoFumam').style.height = (naoFumam / total * maxAltura) + 'px';
-            document.getElementById('barraSemRegistro').style.height = (semRegistro / total * maxAltura) + 'px';
-        }
-        
-        // 6.4 Carregar tabela de medicamentos
-        function carregarTabelaMedicamentos() {
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            const contagem = {};
-            let totalComMedicamento = 0;
-            
-            registros.forEach(r => {
-                if (r.medicamento) {
-                    contagem[r.medicamento] = (contagem[r.medicamento] || 0) + 1;
-                    totalComMedicamento++;
-                }
-            });
-            
-            const tabela = document.getElementById('tabelaMedicamentos');
-            
-            if (Object.keys(contagem).length === 0) {
-                tabela.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-4">
-                    <i class="bi bi-inbox me-1"></i>Nenhum dado disponível.</td></tr>`;
-                return;
-            }
-            
-            const medicamentosOrdenados = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-            
-            tabela.innerHTML = medicamentosOrdenados.map(([med, qtd]) => `
-                <tr>
-                    <td class="ps-4">${traduzirMedicamento(med)}</td>
-                    <td class="text-center">${qtd}</td>
-                    <td class="text-center pe-4">${Math.round((qtd / totalComMedicamento) * 100)}%</td>
-                </tr>
-            `).join('');
-        }
-        
-        // 6.5 Carregar últimos registros
-        function carregarUltimosRegistros() {
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            
-            const ultimos = registros
-                .sort((a, b) => new Date(b.dataHoraRegistro) - new Date(a.dataHoraRegistro))
-                .slice(0, 10);
-            
-            document.getElementById('badgeTotalRegistros').textContent = registros.length + ' registros';
-            
+
+        async function carregarUltimosRegistros() {
+            const registros = await buscarUltimosRegistrosAPI(5);
             const tabela = document.getElementById('tabelaUltimosRegistros');
-            
-            if (ultimos.length === 0) {
+            const badge = document.getElementById('badgeTotalRegistros');
+
+            if (!tabela) return;
+
+            const totalGeral = parseInt(document.getElementById('kpiTotalRegistros').textContent) || 0;
+            badge.textContent = totalGeral + ' registros';
+
+            if (registros.length === 0) {
                 tabela.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">
                     <i class="bi bi-inbox me-1"></i>Nenhum registro encontrado.</td></tr>`;
                 return;
             }
-            
-            tabela.innerHTML = ultimos.map(r => {
-                const paciente = pacientes.find(p => p.id === r.id_paciente);
-                return `
-                    <tr>
-                        <td class="ps-4 fw-semibold">${paciente ? paciente.nomeCompleto : 'Desconhecido'}</td>
-                        <td>${formatarData(r.dataAtendimento)}</td>
-                        <td><small>${r.nome_usuario || '-'}</small></td>
-                        <td>${r.peso || '-'} kg</td>
-                        <td>
-                            <span class="badge ${r.fumaAtualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">
-                                ${r.fumaAtualmente === 'sim' ? 'Sim' : 'Não'}
-                            </span>
-                        </td>
-                        <td>${r.diasSemFumar || '0'}</td>
-                        <td class="pe-4">${r.recaidas || '0'}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-        
-        // 6.6 Carregar pacientes por tempo de adesão
-        function carregarTempoAdesao() {
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            const hoje = new Date();
-            
-            const periodos = {
-                'Até 3 meses': 0,
-                '3 a 6 meses': 0,
-                '6 a 12 meses': 0,
-                'Mais de 12 meses': 0
-            };
-            
-            pacientes.forEach(p => {
-                if (!p.dataAdesao) return;
-                const adesao = new Date(p.dataAdesao + 'T00:00:00');
-                const diffMeses = (hoje.getFullYear() - adesao.getFullYear()) * 12 + (hoje.getMonth() - adesao.getMonth());
-                
-                if (diffMeses <= 3) periodos['Até 3 meses']++;
-                else if (diffMeses <= 6) periodos['3 a 6 meses']++;
-                else if (diffMeses <= 12) periodos['6 a 12 meses']++;
-                else periodos['Mais de 12 meses']++;
-            });
-            
-            const tabela = document.getElementById('tabelaTempoAdesao');
-            tabela.innerHTML = Object.entries(periodos).map(([periodo, qtd]) => `
+
+            tabela.innerHTML = registros.map(r => `
                 <tr>
-                    <td class="ps-4">${periodo}</td>
-                    <td class="text-center pe-4 fw-bold">${qtd}</td>
+                    <td class="ps-4 fw-semibold">${r.nome_paciente || 'Desconhecido'}</td>
+                    <td>${new Date(r.data_atendimento + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                    <td><small>${r.nome_usuario || '-'}</small></td>
+                    <td>${r.peso || '-'} kg</td>
+                    <td><span class="badge ${r.fuma_atualmente === 'sim' ? 'bg-danger' : 'bg-success'} rounded-pill">${r.fuma_atualmente === 'sim' ? 'Sim' : 'Não'}</span></td>
+                    <td>${r.dias_sem_fumar || '0'}</td>
+                    <td class="pe-4">${r.recaidas || '0'}</td>
                 </tr>
             `).join('');
-        }
-        
-        // 6.7 Carregar média de cigarros/dia
-        function carregarMediaCigarros() {
-            const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-            const registros = JSON.parse(localStorage.getItem('registros')) || [];
-            
-            let soma = 0;
-            let contagem = 0;
-            
-            pacientes.forEach(p => {
-                const registrosPaciente = registros
-                    .filter(r => r.id_paciente === p.id)
-                    .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
-                
-                if (registrosPaciente.length > 0 && 
-                    registrosPaciente[0].fumaAtualmente === 'sim' && 
-                    registrosPaciente[0].quantidadeCigarros) {
-                    soma += parseInt(registrosPaciente[0].quantidadeCigarros);
-                    contagem++;
-                }
-            });
-            
-            const media = contagem > 0 ? Math.round(soma / contagem) : 0;
-            document.getElementById('mediaCigarros').textContent = media;
-        }
-        
-        // 7 FUNÇÕES AUXILIARES
-        // 7.1 Formatar data
-        function formatarData(dataISO) {
-            if (!dataISO) return '-';
-            const data = new Date(dataISO + 'T00:00:00');
-            return data.toLocaleDateString('pt-BR');
-        }
-        
-        // 7.2 Traduzir medicamento
-        function traduzirMedicamento(valor) {
-            const mapa = {
-                'adesivo': 'Adesivo de Nicotina',
-                'goma': 'Goma de Mascar',
-                'bupropiona': 'Bupropiona',
-                'vareniclina': 'Vareniclina',
-                'pastilha': 'Pastilha de Nicotina',
-                'outro': 'Outro'
-            };
-            return mapa[valor] || valor;
         }
     </script>
 
