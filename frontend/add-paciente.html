@@ -241,60 +241,15 @@
         </div>
     </div>
 
-    <!-- 4 SCRIPTS -->
+        <!-- 4 SCRIPTS -->
     <!-- 4.1 Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- 4.2 Paciente JS (CRUD) -->
-    <script src="js/paciente.js"></script>
+    <!-- 4.2 App JS (define API_URL e funções globais) -->
+    <script src="js/app.js"></script>
     
-    <!-- 4.3 Script de inicialização da página -->
-    <script>
-        // 5 INICIALIZAÇÃO DA PÁGINA
-        // 5.1 Verificar sessão ao carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            const sessao = JSON.parse(localStorage.getItem('sessao'));
-            if (!sessao) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            // 5.1.1 Configurar data máxima como hoje
-            const hoje = new Date().toISOString().split('T')[0];
-            document.getElementById('dataNascimento').setAttribute('max', hoje);
-            document.getElementById('dataAdesao').setAttribute('max', hoje);
-            
-            // 5.1.2 Inicializar máscara de CPF
-            const inputCpf = document.getElementById('cpf');
-            inputCpf.addEventListener('input', function(e) {
-                let valor = e.target.value.replace(/\D/g, '');
-                if (valor.length <= 11) {
-                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
-                    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-                    e.target.value = valor;
-                }
-            });
-            
-            // 5.1.3 Inicializar máscara de telefone
-            const inputTelefone = document.getElementById('telefone');
-            inputTelefone.addEventListener('input', function(e) {
-                let valor = e.target.value.replace(/\D/g, '');
-                if (valor.length <= 11) {
-                    valor = valor.replace(/^(\d{2})(\d)/, '($1) $2');
-                    valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
-                    e.target.value = valor;
-                }
-            });
-            
-            // 5.1.4 Configurar submit do formulário
-            const form = document.getElementById('formAddPaciente');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                cadastrarPaciente();
-            });
-        });
-    </script>
+    <!-- 4.3 Paciente JS -->
+    <script src="js/paciente.js"></script>
 
 </body>
 </html>
