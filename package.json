@@ -1,0 +1,38 @@
+{
+  "name": "ubs-tabagismo",
+  "version": "1.0.0",
+  "description": "Sistema Web para Registro e Análise de Indicadores no Grupo de Tabagismo da UBS do Ipiranga - UNIVESP PI",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandreArmelline/UBS-Tabagismo.git"
+  },
+  "keywords": [
+    "univesp",
+    "pi",
+    "tabagismo",
+    "ubs",
+    "saude"
+  ],
+  "author": "Grupo PI - UNIVESP",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexandreArmelline/UBS-Tabagismo/issues"
+  },
+  "homepage": "https://github.com/AlexandreArmelline/UBS-Tabagismo#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
