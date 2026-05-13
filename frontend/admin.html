@@ -199,13 +199,114 @@
         </div>
     </div>
 
-    <!-- 5 SCRIPTS -->
+        <!-- 5 SCRIPTS -->
     <!-- 5.1 Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- 5.2 App JS + Usuario JS -->
     <script src="js/app.js"></script>
     <script src="js/usuario.js"></script>
+
+    <!-- 5.3 Inicialização da página -->
+    <script>
+        let usuarioParaExcluir = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            
+            if (!usuario || !sessionStorage.getItem('token')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (usuario.perfil !== 'admin') {
+                window.location.href = 'menu.html';
+                return;
+            }
+
+            await carregarPainelAdmin();
+            
+            document.getElementById('btnConfirmarExclusao').addEventListener('click', confirmarExclusao);
+        });
+
+        async function carregarPainelAdmin() {
+            const usuarios = await listarUsuariosAPI();
+            
+            document.getElementById('kpiTotalUsuarios').textContent = usuarios.length;
+            document.getElementById('kpiTotalAdmins').textContent = usuarios.filter(u => u.perfil === 'admin').length;
+            document.getElementById('kpiTotalOperadores').textContent = usuarios.filter(u => u.perfil === 'operador').length;
+
+            const tabela = document.getElementById('tabelaUsuarios');
+            const cards = document.getElementById('cardsUsuarios');
+
+            if (usuarios.length === 0) {
+                tabela.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox me-1"></i>Nenhum usuário cadastrado.</td></tr>`;
+                cards.innerHTML = '';
+                return;
+            }
+
+            tabela.innerHTML = usuarios.map(u => `
+                <tr>
+                    <td class="ps-4 fw-semibold">${u.nome}</td>
+                    <td>${u.login}</td>
+                    <td>${u.cpf}</td>
+                    <td><span class="badge ${u.perfil === 'admin' ? 'bg-danger' : 'bg-success'} rounded-pill">${u.perfil === 'admin' ? 'Admin' : 'Operador'}</span></td>
+                    <td><span class="badge ${u.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">${u.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                    <td class="pe-4 text-center">
+                        ${u.perfil !== 'admin' ? `<button class="btn btn-sm btn-outline-danger" onclick="abrirModalExclusao(${u.id}, '${u.nome.replace(/'/g, "\\'")}')"><i class="bi bi-trash-fill"></i></button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+
+            cards.innerHTML = usuarios.map(u => `
+                <div class="card shadow-sm border-0 rounded-4 mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0">${u.nome}</h6>
+                            <span class="badge ${u.perfil === 'admin' ? 'bg-danger' : 'bg-success'} rounded-pill">${u.perfil === 'admin' ? 'Admin' : 'Operador'}</span>
+                        </div>
+                        <p class="small text-muted mb-1">Login: ${u.login}</p>
+                        <p class="small text-muted mb-2">CPF: ${u.cpf}</p>
+                        ${u.perfil !== 'admin' ? `<button class="btn btn-sm btn-outline-danger" onclick="abrirModalExclusao(${u.id}, '${u.nome.replace(/'/g, "\\'")}')"><i class="bi bi-trash-fill me-1"></i>Excluir</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function abrirModalExclusao(id, nome) {
+            usuarioParaExcluir = id;
+            document.getElementById('nomeUsuarioExcluir').textContent = nome;
+            const modal = new bootstrap.Modal(document.getElementById('modalConfirmarExclusao'));
+            modal.show();
+        }
+
+        async function confirmarExclusao() {
+            if (!usuarioParaExcluir) return;
+            
+            const resultado = await excluirUsuarioAPI(usuarioParaExcluir);
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao'));
+            modal.hide();
+
+            if (resultado.sucesso) {
+                exibirFeedbackAdmin('Usuário excluído com sucesso!', 'success');
+                await carregarPainelAdmin();
+            } else {
+                exibirFeedbackAdmin(resultado.erro, 'danger');
+            }
+            
+            usuarioParaExcluir = null;
+        }
+
+        function exibirFeedbackAdmin(mensagem, tipo) {
+            const msgFeedback = document.getElementById('msgFeedback');
+            const icone = tipo === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill';
+            msgFeedback.className = `alert alert-${tipo} mt-3 text-center rounded-3`;
+            msgFeedback.innerHTML = `<i class="bi bi-${icone} me-1"></i>${mensagem}`;
+            msgFeedback.classList.remove('d-none');
+            setTimeout(() => msgFeedback.classList.add('d-none'), 5000);
+        }
+    </script>
 
 </body>
 </html>

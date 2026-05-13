@@ -160,7 +160,7 @@
                                         <i class="bi bi-map-fill me-1 text-success"></i>UF
                                     </label>
                                     <select class="form-select" id="uf">
-                                        <option value="" selected disabled>Selecione</option>
+                                        <option value="">Selecione</option>
                                         <option value="SP">SP</option>
                                         <option value="RJ">RJ</option>
                                         <option value="MG">MG</option>
@@ -241,7 +241,7 @@
         </div>
     </div>
 
-        <!-- 4 SCRIPTS -->
+           <!-- 4 SCRIPTS -->
     <!-- 4.1 Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -250,6 +250,49 @@
     
     <!-- 4.3 Paciente JS -->
     <script src="js/paciente.js"></script>
+
+    <!-- 4.4 Inicialização da página -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            if (!usuario || !sessionStorage.getItem('token')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Configurar data máxima como hoje
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataNascimento').setAttribute('max', hoje);
+            document.getElementById('dataAdesao').setAttribute('max', hoje);
+
+            // Máscara de CPF
+            document.getElementById('cpf').addEventListener('input', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length <= 11) {
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    e.target.value = valor;
+                }
+            });
+
+            // Máscara de telefone
+            document.getElementById('telefone').addEventListener('input', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length <= 11) {
+                    valor = valor.replace(/^(\d{2})(\d)/, '($1) $2');
+                    valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
+                    e.target.value = valor;
+                }
+            });
+
+            // Submit do formulário
+            document.getElementById('formAddPaciente').addEventListener('submit', function(e) {
+                e.preventDefault();
+                cadastrarPaciente();
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -206,7 +206,7 @@
         </div>
     </div>
 
-        <!-- 4 SCRIPTS -->
+            <!-- 4 SCRIPTS -->
     <!-- 4.1 Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -215,6 +215,85 @@
     
     <!-- 4.3 Usuario JS -->
     <script src="js/usuario.js"></script>
+
+    <!-- 4.4 Inicialização da página -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+            
+            // Verificar se há sessão ativa
+            if (!usuario || !sessionStorage.getItem('token')) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Verificar se é admin
+            if (usuario.perfil !== 'admin') {
+                exibirErroUsuario('Acesso negado. Apenas administradores podem cadastrar usuários.');
+                document.getElementById('formAddUsuario').style.display = 'none';
+                return;
+            }
+            
+            // Máscara de CPF
+            document.getElementById('cpf').addEventListener('input', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length <= 11) {
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+                    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    e.target.value = valor;
+                }
+            });
+            
+            // Toggle visibilidade da senha
+            document.getElementById('btnVerSenha').addEventListener('click', function() {
+                const inputSenha = document.getElementById('senha');
+                const tipo = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputSenha.setAttribute('type', tipo);
+                const icone = this.querySelector('i');
+                icone.className = tipo === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
+            });
+            
+            // Verificar força da senha
+            document.getElementById('senha').addEventListener('input', function() {
+                const forca = verificarForcaSenha(this.value);
+                const container = document.getElementById('forcaSenhaContainer');
+                const barra = document.getElementById('barraForcaSenha');
+                const texto = document.getElementById('textoForcaSenha');
+                
+                if (this.value.length > 0) {
+                    container.style.display = '';
+                    barra.style.width = forca.porcentagem + '%';
+                    barra.className = 'progress-bar ' + forca.classe;
+                    texto.textContent = forca.texto;
+                    texto.className = 'ms-2 small fw-semibold ' + forca.classe.replace('bg-', 'text-');
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // Submit do formulário
+            document.getElementById('formAddUsuario').addEventListener('submit', function(e) {
+                e.preventDefault();
+                cadastrarUsuario();
+            });
+        });
+        
+        // Função auxiliar de força da senha
+        function verificarForcaSenha(senha) {
+            let forca = 0;
+            
+            if (senha.length >= 6) forca++;
+            if (senha.length >= 8) forca++;
+            if (/[a-z]/.test(senha) && /[A-Z]/.test(senha)) forca++;
+            if (/\d/.test(senha)) forca++;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(senha)) forca++;
+            
+            if (forca <= 2) return { porcentagem: 33, texto: 'Fraca', classe: 'bg-danger' };
+            if (forca <= 3) return { porcentagem: 66, texto: 'Média', classe: 'bg-warning' };
+            return { porcentagem: 100, texto: 'Forte', classe: 'bg-success' };
+        }
+    </script>
 
 </body>
 </html>
