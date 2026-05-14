@@ -1,0 +1,3 @@
+node_modules/
+backend/ubs_tabagismo.db
+.env
