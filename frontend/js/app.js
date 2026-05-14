@@ -1,6 +1,8 @@
 // 1 CONFIGURAÇÕES INICIAIS E VARIÁVEIS GLOBAIS
 // 1.1 URL base da API
-const API_URL = 'http://localhost:3000/api';
+//const API_URL = 'http://localhost:3000/api';
+
+const API_URL = 'https://ubs-tabagismo.onrender.com/api';
 
 // 1.2 Token JWT (armazenado em memória e sessionStorage)
 let authToken = sessionStorage.getItem('token') || null;
