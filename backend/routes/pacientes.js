@@ -157,29 +157,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// ROTA TEMPORÁRIA - EXCLUIR POR NOME
-router.delete('/nome/:nome', async (req, res) => {
-    try {
-        const resultado = await run(
-            'DELETE FROM pacientes WHERE nome_completo LIKE ?',
-            [`%${req.params.nome}%`]
-        );
-        
-        // Registrar log
-        await run(
-            `INSERT INTO logs (id_usuario, acao, tabela_afetada, dados_novos)
-             VALUES (?, 'EXCLUIR_POR_NOME', 'pacientes', ?)`,
-            [req.usuario.id, `Excluídos ${resultado.changes} pacientes com nome "${req.params.nome}"`]
-        );
-
-        res.json({ 
-            mensagem: `${resultado.changes} paciente(s) excluído(s) com sucesso!` 
-        });
-    } catch (err) {
-        console.error('Erro ao excluir:', err);
-        res.status(500).json({ erro: 'Erro ao excluir pacientes.' });
-    }
-});
 
 // 3 EXPORTAÇÃO
 module.exports = router;
