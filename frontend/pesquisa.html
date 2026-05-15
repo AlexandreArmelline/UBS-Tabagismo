@@ -280,7 +280,7 @@
 
         // 5.2 Confirmar exclusão
         function confirmarExclusao(id, nome) {
-            if (confirm(`Tem certeza que deseja excluir o paciente "${nome}"?\n\nEsta ação apenas inativará o paciente.`)) {
+            if (confirm(`Deseja inativar o paciente "${nome}"?\n\n`)) {
                 excluirPaciente(id);
             }
         }
