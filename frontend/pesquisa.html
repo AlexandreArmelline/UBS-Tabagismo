@@ -165,7 +165,7 @@
     <!-- 4.3 Paciente JS (buscarPacientes) -->
     <script src="js/paciente.js"></script>
 
-    <!-- 4.4 Inicialização da pesquisa -->
+     <!-- 4.4 Inicialização da pesquisa -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const usuario = JSON.parse(sessionStorage.getItem('usuario'));
@@ -174,23 +174,18 @@
                 return;
             }
 
-            // Submit do formulário
             document.getElementById('formPesquisa').addEventListener('submit', function(e) {
                 e.preventDefault();
                 realizarPesquisa();
             });
 
-            // Pesquisa automática com delay
             let timeoutPesquisa;
             document.getElementById('termoBusca').addEventListener('input', function() {
                 clearTimeout(timeoutPesquisa);
                 timeoutPesquisa = setTimeout(realizarPesquisa, 500);
             });
 
-            // Pesquisa ao mudar filtro
             document.getElementById('filtroStatus').addEventListener('change', realizarPesquisa);
-
-            // Foco no campo de busca
             document.getElementById('termoBusca').focus();
         });
 
@@ -221,7 +216,7 @@
 
             // Tabela desktop
             tabela.innerHTML = resultados.map(p => `
-                <tr style="cursor:pointer;" onclick="window.location.href='registro-clinico.html?id=${p.id}'">
+                <tr>
                     <td class="ps-4 fw-semibold">${p.nome_completo}</td>
                     <td>${p.cpf}</td>
                     <td>${p.telefone || '-'}</td>
@@ -232,8 +227,14 @@
                         </span>
                     </td>
                     <td class="text-center pe-4">
-                        <button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); window.location.href='registro-clinico.html?id=${p.id}'" title="Registro Clínico">
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="event.stopPropagation(); window.location.href='registro-clinico.html?id=${p.id}'" title="Registro Clínico">
                             <i class="bi bi-clipboard2-pulse-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="event.stopPropagation(); editarPaciente(${p.id})" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')" title="Excluir">
+                            <i class="bi bi-trash-fill"></i>
                         </button>
                     </td>
                 </tr>
@@ -241,7 +242,7 @@
 
             // Cards mobile
             cards.innerHTML = resultados.map(p => `
-                <div class="card shadow-sm border-0 rounded-4 mb-3" onclick="window.location.href='registro-clinico.html?id=${p.id}'" style="cursor:pointer;">
+                <div class="card shadow-sm border-0 rounded-4 mb-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h6 class="fw-bold mb-0">${p.nome_completo}</h6>
@@ -255,12 +256,54 @@
                         <p class="small text-muted mb-2">
                             <i class="bi bi-calendar-check me-1"></i>Adesão: ${p.data_adesao ? new Date(p.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}
                         </p>
-                        <button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); window.location.href='registro-clinico.html?id=${p.id}'">
-                            <i class="bi bi-clipboard2-pulse-fill me-1"></i>Registro Clínico
-                        </button>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-info" onclick="window.location.href='registro-clinico.html?id=${p.id}'">
+                                <i class="bi bi-clipboard2-pulse-fill me-1"></i>Registro
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editarPaciente(${p.id})">
+                                <i class="bi bi-pencil-fill me-1"></i>Editar
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')">
+                                <i class="bi bi-trash-fill me-1"></i>Excluir
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        // 5 FUNÇÕES DE EDIÇÃO E EXCLUSÃO
+        // 5.1 Editar paciente
+        function editarPaciente(id) {
+            window.location.href = `add-paciente.html?editar=${id}`;
+        }
+
+        // 5.2 Confirmar exclusão
+        function confirmarExclusao(id, nome) {
+            if (confirm(`Tem certeza que deseja excluir o paciente "${nome}"?\n\nEsta ação apenas inativará o paciente.`)) {
+                excluirPaciente(id);
+            }
+        }
+
+        // 5.3 Excluir paciente (inativar)
+        async function excluirPaciente(id) {
+            try {
+                const response = await fetch(`${API_URL}/pacientes/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Paciente excluído com sucesso!');
+                    realizarPesquisa(); // Atualiza a lista
+                } else {
+                    alert(data.erro || 'Erro ao excluir paciente.');
+                }
+            } catch (err) {
+                alert('Erro ao excluir paciente.');
+            }
         }
 
         function limparPesquisa() {

@@ -241,7 +241,7 @@
         </div>
     </div>
 
-           <!-- 4 SCRIPTS -->
+               <!-- 4 SCRIPTS -->
     <!-- 4.1 Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -253,12 +253,19 @@
 
     <!-- 4.4 Inicialização da página -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        let modoEdicao = false;
+        let pacienteId = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
             const usuario = JSON.parse(sessionStorage.getItem('usuario'));
             if (!usuario || !sessionStorage.getItem('token')) {
                 window.location.href = 'index.html';
                 return;
             }
+
+            // Verificar se está em modo edição
+            const urlParams = new URLSearchParams(window.location.search);
+            const idEditar = urlParams.get('editar');
 
             // Configurar data máxima como hoje
             const hoje = new Date().toISOString().split('T')[0];
@@ -286,12 +293,107 @@
                 }
             });
 
+            // Se for edição, carregar dados do paciente
+            if (idEditar) {
+                modoEdicao = true;
+                pacienteId = idEditar;
+                await carregarDadosPaciente(idEditar);
+            }
+
             // Submit do formulário
-            document.getElementById('formAddPaciente').addEventListener('submit', function(e) {
+            document.getElementById('formAddPaciente').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                cadastrarPaciente();
+                
+                if (modoEdicao) {
+                    await atualizarPaciente();
+                } else {
+                    await cadastrarPaciente();
+                }
             });
         });
+
+        // 5 FUNÇÕES DE EDIÇÃO
+        // 5.1 Carregar dados do paciente para edição
+        async function carregarDadosPaciente(id) {
+            try {
+                const response = await fetch(`${API_URL}/pacientes/${id}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    alert('Erro ao carregar dados do paciente.');
+                    window.location.href = 'pesquisa.html';
+                    return;
+                }
+
+                const paciente = await response.json();
+
+                // Preencher formulário
+                document.getElementById('nomeCompleto').value = paciente.nome_completo || '';
+                document.getElementById('cpf').value = paciente.cpf || '';
+                document.getElementById('rg').value = paciente.rg || '';
+                document.getElementById('dataNascimento').value = paciente.data_nascimento || '';
+                document.getElementById('telefone').value = paciente.telefone || '';
+                document.getElementById('endereco').value = paciente.endereco || '';
+                document.getElementById('cidade').value = paciente.cidade || '';
+                document.getElementById('uf').value = paciente.uf || '';
+                document.getElementById('dataAdesao').value = paciente.data_adesao || '';
+                document.getElementById('observacoes').value = paciente.observacoes || '';
+
+                // Mudar título e botão
+                document.querySelector('h3').textContent = 'Editar Paciente';
+                document.querySelector('button[type="submit"]').innerHTML = 
+                    '<i class="bi bi-save-fill me-1"></i>Salvar Alterações';
+
+            } catch (err) {
+                alert('Erro ao carregar dados do paciente.');
+                window.location.href = 'pesquisa.html';
+            }
+        }
+
+        // 5.2 Atualizar paciente via API
+        async function atualizarPaciente() {
+            const dados = {
+                nome_completo: document.getElementById('nomeCompleto').value.trim(),
+                cpf: document.getElementById('cpf').value.trim(),
+                rg: document.getElementById('rg').value.trim(),
+                data_nascimento: document.getElementById('dataNascimento').value,
+                telefone: document.getElementById('telefone').value.trim(),
+                endereco: document.getElementById('endereco').value.trim(),
+                cidade: document.getElementById('cidade').value.trim(),
+                uf: document.getElementById('uf').value,
+                data_adesao: document.getElementById('dataAdesao').value,
+                observacoes: document.getElementById('observacoes').value.trim(),
+                ativo: true
+            };
+
+            if (!dados.nome_completo || !dados.cpf) {
+                exibirErroPaciente('Nome completo e CPF são obrigatórios.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/pacientes/${pacienteId}`, {
+                    method: 'PUT',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(dados)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    exibirSucesso('Paciente atualizado com sucesso!');
+                    // Redirecionar após 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'pesquisa.html';
+                    }, 1000);
+                } else {
+                    exibirErroPaciente(data.erro || 'Erro ao atualizar paciente.');
+                }
+            } catch (err) {
+                exibirErroPaciente('Erro ao conectar com o servidor.');
+            }
+        }
     </script>
 
 </body>

@@ -157,6 +157,35 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+    // 2.5 DELETE /api/pacientes/:id - Excluir (inativar) paciente
+    router.delete('/:id', async (req, res) => {
+    try {
+        const paciente = await get('SELECT * FROM pacientes WHERE id = ?', [req.params.id]);
+        
+        if (!paciente) {
+            return res.status(404).json({ erro: 'Paciente não encontrado.' });
+        }
+
+        // Exclusão lógica: apenas inativa
+        await run(
+            `UPDATE pacientes SET ativo = 0, data_atualizacao = datetime('now', '-3 hours') WHERE id = ?`,
+            [req.params.id]
+        );
+
+        // Registrar log
+        await run(
+            `INSERT INTO logs (id_usuario, acao, tabela_afetada, id_registro_afetado, dados_anteriores)
+             VALUES (?, 'EXCLUIR', 'pacientes', ?, ?)`,
+            [req.usuario.id, req.params.id, JSON.stringify(paciente)]
+        );
+
+        res.json({ mensagem: 'Paciente excluído com sucesso!' });
+
+    } catch (err) {
+        console.error('Erro ao excluir paciente:', err);
+        res.status(500).json({ erro: 'Erro ao excluir paciente.' });
+    }
+});
 
 // 3 EXPORTAÇÃO
 module.exports = router;
