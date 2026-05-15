@@ -264,7 +264,7 @@
                                 <i class="bi bi-pencil-fill me-1"></i>Editar
                             </button>
                             <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')">
-                                <i class="bi bi-trash-fill me-1"></i>Inativar
+                                <i class="bi bi-trash-fill me-1"></i>Excluir
                             </button>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
 
         // 5.2 Confirmar exclusão
         function confirmarExclusao(id, nome) {
-            if (confirm(`Deseja inativar o paciente "${nome}"?\n\n`)) {
+            if (confirm(`Tem certeza que deseja excluir o paciente "${nome}"?\n\nEsta ação apenas inativará o paciente.`)) {
                 excluirPaciente(id);
             }
         }
