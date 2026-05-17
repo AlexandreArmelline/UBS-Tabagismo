@@ -1,4 +1,4 @@
-# 🏥 Sistema Web - Grupo de Tabagismo da UBS Ipiranga
+# Sistema Web - Grupo de Tabagismo da UBS Ipiranga
 
 Sistema web desenvolvido para o **Projeto Integrador** do curso de **Bacharelado em Tecnologia da Informação** da **UNIVESP**.
 
@@ -6,24 +6,24 @@ O sistema permite o cadastro e acompanhamento de pacientes do Grupo de Tabagismo
 
 ---
 
-## 📋 Funcionalidades
+## Funcionalidades
 
-### 🔐 Autenticação
+###  Autenticação
 - Login com usuário/CPF e senha
 - Dois perfis de acesso: **Administrador** e **Operador**
 - Senhas criptografadas com bcrypt
 - Autenticação via JWT (JSON Web Token)
 
-### 👤 Gestão de Pacientes
+###  Gestão de Pacientes
 - Cadastrar, editar, inativar e reativar pacientes
 - Busca por nome ou CPF
 - Filtro por status (ativos/inativos)
 
-### 👥 Gestão de Usuários (Admin)
+###  Gestão de Usuários (Admin)
 - Cadastrar e excluir profissionais
 - Apenas administradores têm acesso
 
-### 📋 Registro Clínico
+###  Registro Clínico
 - Registro de indicadores de tabagismo
 - Peso, pressão arterial, cigarros/dia
 - Medicamentos utilizados
@@ -31,7 +31,7 @@ O sistema permite o cadastro e acompanhamento de pacientes do Grupo de Tabagismo
 - Gatilhos, hobbies e ambiente familiar
 - Histórico completo por paciente
 
-### 📊 Dashboard
+###  Dashboard
 - Total de pacientes
 - Taxa de cessação do tabagismo
 - Gráfico de status (fumam/não fumam/sem registro)
@@ -39,14 +39,14 @@ O sistema permite o cadastro e acompanhamento de pacientes do Grupo de Tabagismo
 - Média de cigarros/dia
 - Últimos registros
 
-### 🔒 Segurança e LGPD
+###  Segurança e LGPD
 - Senhas com hash bcrypt
 - Log de todas as operações
 - Exclusão lógica (não apaga dados)
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 | Tecnologia | Finalidade |
 |------------|------------|
@@ -61,7 +61,7 @@ O sistema permite o cadastro e acompanhamento de pacientes do Grupo de Tabagismo
 
 ---
 
-## 📁 Estrutura do Projeto
+##  Estrutura do Projeto
 UBS-Tabagismo/
 ├── frontend/ # Interface do usuário
 │ ├── index.html # Tela de Login
@@ -107,7 +107,7 @@ https://ubs-tabagismo.onrender.com
 _____________________________________________________________________________________________________________
 
 
-📊 Modelo de Dados
+ Modelo de Dados
 Entidades Principais:
 PACIENTE - Dados cadastrais dos pacientes
 
