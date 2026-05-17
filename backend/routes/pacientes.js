@@ -20,13 +20,11 @@ router.get('/', async (req, res) => {
         let sql = 'SELECT * FROM pacientes WHERE 1=1';
         const params = [];
 
-        // 2.1.1 Filtro de busca
         if (busca) {
             sql += ' AND (nome_completo LIKE ? OR cpf LIKE ?)';
             params.push(`%${busca}%`, `%${busca}%`);
         }
 
-        // 2.1.2 Filtro de status
         if (status === 'ativo') {
             sql += ' AND ativo = 1';
         } else if (status === 'inativo') {
@@ -79,10 +77,11 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // 2.3.2 Verificar CPF duplicado
+        // 2.3.2 Verificar CPF duplicado (remove máscara para comparar)
+        const cpfLimpo = cpf.replace(/\D/g, '');
         const existente = await get(
-            'SELECT id FROM pacientes WHERE cpf = ?',
-            [cpf.replace(/\D/g, '')]
+            'SELECT id FROM pacientes WHERE REPLACE(REPLACE(REPLACE(cpf, ".", ""), "-", ""), "/", "") = ?',
+            [cpfLimpo]
         );
 
         if (existente) {
@@ -96,7 +95,8 @@ router.post('/', async (req, res) => {
             `INSERT INTO pacientes 
              (nome_completo, cpf, rg, data_nascimento, telefone, endereco, cidade, uf, data_adesao, observacoes)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [nome_completo, cpf, rg, data_nascimento, telefone, endereco, cidade, uf, data_adesao, observacoes]
+            [nome_completo, cpf, rg || '', data_nascimento || '', telefone || '', 
+             endereco || '', cidade || '', uf || '', data_adesao || '', observacoes || '']
         );
 
         // 2.3.4 Registrar log (LGPD)
@@ -112,8 +112,8 @@ router.post('/', async (req, res) => {
         });
 
     } catch (err) {
-        console.error('Erro ao cadastrar paciente:', err);
-        res.status(500).json({ erro: 'Erro ao cadastrar paciente.' });
+        console.error('Erro ao cadastrar paciente:', err.message);
+        res.status(500).json({ erro: 'Erro ao cadastrar paciente. ' + err.message });
     }
 });
 
@@ -138,11 +138,11 @@ router.put('/:id', async (req, res) => {
              data_adesao = ?, observacoes = ?, ativo = ?,
              data_atualizacao = datetime('now', '-3 hours')
              WHERE id = ?`,
-            [nome_completo, cpf, rg, data_nascimento, telefone, endereco, cidade, uf, 
-             data_adesao, observacoes, ativo !== false ? 1 : 0, req.params.id]
+            [nome_completo, cpf, rg || '', data_nascimento || '', telefone || '', 
+             endereco || '', cidade || '', uf || '', data_adesao || '', observacoes || '', 
+             ativo !== false ? 1 : 0, req.params.id]
         );
 
-        // Registrar log (LGPD)
         await run(
             `INSERT INTO logs (id_usuario, acao, tabela_afetada, id_registro_afetado, dados_anteriores, dados_novos)
              VALUES (?, 'ATUALIZAR', 'pacientes', ?, ?, ?)`,
@@ -157,8 +157,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-    // 2.5 DELETE /api/pacientes/:id - Excluir (inativar) paciente
-    router.delete('/:id', async (req, res) => {
+// 2.5 DELETE /api/pacientes/:id - Excluir (inativar) paciente
+router.delete('/:id', async (req, res) => {
     try {
         const paciente = await get('SELECT * FROM pacientes WHERE id = ?', [req.params.id]);
         
@@ -166,13 +166,11 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ erro: 'Paciente não encontrado.' });
         }
 
-        // Exclusão lógica: apenas inativa
         await run(
             `UPDATE pacientes SET ativo = 0, data_atualizacao = datetime('now', '-3 hours') WHERE id = ?`,
             [req.params.id]
         );
 
-        // Registrar log
         await run(
             `INSERT INTO logs (id_usuario, acao, tabela_afetada, id_registro_afetado, dados_anteriores)
              VALUES (?, 'EXCLUIR', 'pacientes', ?, ?)`,
@@ -186,6 +184,7 @@ router.put('/:id', async (req, res) => {
         res.status(500).json({ erro: 'Erro ao excluir paciente.' });
     }
 });
+
 
 // 3 EXPORTAÇÃO
 module.exports = router;
