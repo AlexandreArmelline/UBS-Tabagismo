@@ -48,15 +48,18 @@
                     <h3 class="fw-bold text-success">Adicionar Paciente</h3>
                     <p class="text-muted small">Preencha os dados do novo paciente do Grupo de Tabagismo</p>
                 </div>
+
+                <!-- 3.2 MENSAGEM DE FEEDBACK -->
+                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
                 
-                <!-- 3.2 CARD DO FORMULÁRIO -->
+                <!-- 3.3 CARD DO FORMULÁRIO -->
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-4">
                         
-                        <!-- 3.2.1 Formulário -->
+                        <!-- 3.3.1 Formulário -->
                         <form id="formAddPaciente" novalidate>
                             
-                            <!-- 3.2.2 Campo Nome Completo -->
+                            <!-- 3.3.2 Campo Nome Completo -->
                             <div class="mb-3">
                                 <label for="nomeCompleto" class="form-label fw-semibold">
                                     <i class="bi bi-person-fill me-1 text-success"></i>Nome Completo
@@ -71,7 +74,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.3 Linha CPF e RG -->
+                            <!-- 3.3.3 Linha CPF e RG -->
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <label for="cpf" class="form-label fw-semibold">
@@ -100,7 +103,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3.2.4 Campo Data de Nascimento -->
+                            <!-- 3.3.4 Campo Data de Nascimento -->
                             <div class="mb-3">
                                 <label for="dataNascimento" class="form-label fw-semibold">
                                     <i class="bi bi-calendar-fill me-1 text-success"></i>Data de Nascimento
@@ -113,7 +116,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.5 Campo Telefone -->
+                            <!-- 3.3.5 Campo Telefone -->
                             <div class="mb-3">
                                 <label for="telefone" class="form-label fw-semibold">
                                     <i class="bi bi-telephone-fill me-1 text-success"></i>Telefone
@@ -127,7 +130,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.6 Campo Endereço -->
+                            <!-- 3.3.6 Campo Endereço -->
                             <div class="mb-3">
                                 <label for="endereco" class="form-label fw-semibold">
                                     <i class="bi bi-geo-alt-fill me-1 text-success"></i>Endereço
@@ -141,7 +144,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.7 Linha Cidade e UF -->
+                            <!-- 3.3.7 Linha Cidade e UF -->
                             <div class="row g-3 mb-3">
                                 <div class="col-md-8">
                                     <label for="cidade" class="form-label fw-semibold">
@@ -192,7 +195,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3.2.8 Campo Data de Adesão -->
+                            <!-- 3.3.8 Campo Data de Adesão -->
                             <div class="mb-3">
                                 <label for="dataAdesao" class="form-label fw-semibold">
                                     <i class="bi bi-calendar-check-fill me-1 text-success"></i>Data de Adesão ao Grupo
@@ -205,7 +208,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.9 Campo Observações -->
+                            <!-- 3.3.9 Campo Observações -->
                             <div class="mb-4">
                                 <label for="observacoes" class="form-label fw-semibold">
                                     <i class="bi bi-chat-left-text-fill me-1 text-success"></i>Observações
@@ -219,7 +222,7 @@
                                 ></textarea>
                             </div>
                             
-                            <!-- 3.2.10 Botões de Ação -->
+                            <!-- 3.3.10 Botões de Ação -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='menu.html'">
                                     <i class="bi bi-x-circle me-1"></i>Cancelar
@@ -234,8 +237,7 @@
                     </div>
                 </div>
                 
-                <!-- 3.3 MENSAGEM DE FEEDBACK -->
-                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
+                
                 
             </div>
         </div>

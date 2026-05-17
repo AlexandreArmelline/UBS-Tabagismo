@@ -34,6 +34,7 @@
             
         </div>
     </nav>
+    
 
     <!-- 3 CONTAINER PRINCIPAL -->
     <div class="container py-5">
@@ -48,15 +49,18 @@
                     <h3 class="fw-bold text-primary">Adicionar Usuário</h3>
                     <p class="text-muted small">Cadastre um novo profissional para acessar o sistema</p>
                 </div>
+
+                <!-- 3.2 MENSAGEM DE FEEDBACK -->
+                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
                 
-                <!-- 3.2 CARD DO FORMULÁRIO -->
+                <!-- 3.3 CARD DO FORMULÁRIO -->
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-4">
                         
-                        <!-- 3.2.1 Formulário -->
+                        <!-- 3.3.1 Formulário -->
                         <form id="formAddUsuario" novalidate>
                             
-                            <!-- 3.2.2 Campo Nome Completo -->
+                            <!-- 3.3.2 Campo Nome Completo -->
                             <div class="mb-3">
                                 <label for="nomeCompleto" class="form-label fw-semibold">
                                     <i class="bi bi-person-fill me-1 text-primary"></i>Nome Completo
@@ -71,7 +75,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.3 Campo CPF -->
+                            <!-- 3.3.3 Campo CPF -->
                             <div class="mb-3">
                                 <label for="cpf" class="form-label fw-semibold">
                                     <i class="bi bi-person-vcard-fill me-1 text-primary"></i>CPF
@@ -86,7 +90,7 @@
                                 >
                             </div>
                             
-                            <!-- 3.2.4 Campo Registro Profissional -->
+                            <!-- 3.3.4 Campo Registro Profissional -->
                             <div class="mb-3">
                                 <label for="registroProfissional" class="form-label fw-semibold">
                                     <i class="bi bi-file-earmark-medical-fill me-1 text-primary"></i>Registro Profissional
@@ -101,7 +105,7 @@
                                 <div class="form-text small">Opcional. Informe o registro do conselho de classe.</div>
                             </div>
                             
-                            <!-- 3.2.5 Campo Login -->
+                            <!-- 3.3.5 Campo Login -->
                             <div class="mb-3">
                                 <label for="login" class="form-label fw-semibold">
                                     <i class="bi bi-person-check-fill me-1 text-primary"></i>Login de Acesso
@@ -118,7 +122,7 @@
                                 <div class="form-text small">Este login será usado para acessar o sistema.</div>
                             </div>
                             
-                            <!-- 3.2.6 Linha Senha e Confirmar Senha -->
+                            <!-- 3.3.6 Linha Senha e Confirmar Senha -->
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <label for="senha" class="form-label fw-semibold">
@@ -157,7 +161,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3.2.7 Indicador de Força da Senha -->
+                            <!-- 3.3.7 Indicador de Força da Senha -->
                             <div class="mb-3" id="forcaSenhaContainer" style="display: none;">
                                 <div class="d-flex align-items-center">
                                     <small class="me-2 fw-semibold">Força da senha:</small>
@@ -168,7 +172,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3.2.8 Campo Perfil de Acesso -->
+                            <!-- 3.3.8 Campo Perfil de Acesso -->
                             <div class="mb-4">
                                 <label for="perfilAcesso" class="form-label fw-semibold">
                                     <i class="bi bi-shield-lock-fill me-1 text-primary"></i>Perfil de Acesso
@@ -184,7 +188,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3.2.9 Botões de Ação -->
+                            <!-- 3.3.9 Botões de Ação -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='menu.html'">
                                     <i class="bi bi-x-circle me-1"></i>Cancelar
@@ -199,8 +203,6 @@
                     </div>
                 </div>
                 
-                <!-- 3.3 MENSAGEM DE FEEDBACK -->
-                <div id="msgFeedback" class="alert mt-3 d-none text-center" role="alert"></div>
                 
             </div>
         </div>
