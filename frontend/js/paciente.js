@@ -123,17 +123,19 @@ async function cadastrarPaciente() {
 function exibirSucesso(mensagem) {
     const msg = document.getElementById('msgFeedback');
     if (!msg) return;
-    msg.className = 'alert alert-success mt-3 text-center rounded-3';
+    msg.className = 'alert alert-success text-center rounded-3';
     msg.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>${mensagem}`;
     msg.classList.remove('d-none');
+    msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => msg.classList.add('d-none'), 5000);
 }
 
 function exibirErroPaciente(mensagem) {
     const msg = document.getElementById('msgFeedback');
     if (!msg) return;
-    msg.className = 'alert alert-danger mt-3 text-center rounded-3';
+    msg.className = 'alert alert-danger text-center rounded-3';
     msg.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i>${mensagem}`;
     msg.classList.remove('d-none');
+    msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => msg.classList.add('d-none'), 5000);
 }
