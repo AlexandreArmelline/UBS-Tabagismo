@@ -137,6 +137,24 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+// 2.5 GET /api/registros/logs - Buscar logs
+router.get('/logs', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 50;
+        const logs = await query(
+            `SELECT l.*, u.nome as nome_usuario
+             FROM logs l
+             LEFT JOIN usuarios u ON l.id_usuario = u.id
+             ORDER BY l.data_hora DESC
+             LIMIT ?`,
+            [limit]
+        );
+        res.json(logs);
+    } catch (err) {
+        console.error('Erro ao buscar logs:', err);
+        res.status(500).json({ erro: 'Erro ao buscar logs.' });
+    }
+});
 
 // 3 EXPORTAÇÃO
 module.exports = router;
