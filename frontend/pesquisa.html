@@ -350,47 +350,5 @@
         }
     </script>
 
-        // 5 FUNÇÕES DE EDIÇÃO E EXCLUSÃO
-        // 5.1 Editar paciente
-        function editarPaciente(id) {
-            window.location.href = `add-paciente.html?editar=${id}`;
-        }
-
-        // 5.2 Confirmar exclusão
-        function confirmarExclusao(id, nome) {
-            if (confirm(`Tem certeza que deseja excluir o paciente "${nome}"?\n\nEsta ação apenas inativará o paciente.`)) {
-                excluirPaciente(id);
-            }
-        }
-
-        // 5.3 Excluir paciente (inativar)
-        async function excluirPaciente(id) {
-            try {
-                const response = await fetch(`${API_URL}/pacientes/${id}`, {
-                    method: 'DELETE',
-                    headers: getAuthHeaders()
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    alert('Paciente excluído com sucesso!');
-                    realizarPesquisa(); // Atualiza a lista
-                } else {
-                    alert(data.erro || 'Erro ao excluir paciente.');
-                }
-            } catch (err) {
-                alert('Erro ao excluir paciente.');
-            }
-        }
-
-        function limparPesquisa() {
-            document.getElementById('termoBusca').value = '';
-            document.getElementById('filtroStatus').value = 'todos';
-            document.getElementById('areaResultados').style.display = 'none';
-            document.getElementById('termoBusca').focus();
-        }
-    </script>
-
 </body>
 </html>
