@@ -61,42 +61,6 @@ O sistema permite o cadastro e acompanhamento de pacientes do Grupo de Tabagismo
 
 ---
 
-##  Estrutura do Projeto
-UBS-Tabagismo/
-├── frontend/ # Interface do usuário
-│ ├── index.html # Tela de Login
-│ ├── menu.html # Menu Principal
-│ ├── pesquisa.html # Pesquisa de Pacientes
-│ ├── add-paciente.html # Cadastro/Edição de Paciente
-│ ├── add-usuario.html # Cadastro de Usuário
-│ ├── registro-clinico.html # Registro Clínico
-│ ├── dashboard.html # Dashboard de Indicadores
-│ ├── admin.html # Administração do Sistema
-│ ├── css/estilo.css # Estilos personalizados
-│ └── js/
-│ ├── app.js # Autenticação e navegação
-│ ├── paciente.js # CRUD de pacientes
-│ ├── usuario.js # CRUD de usuários
-│ └── registro.js # Registros clínicos
-│
-├── backend/ # Servidor e API
-│ ├── server.js # Servidor Express
-│ ├── database.js # Conexão e modelo SQLite
-│ ├── routes/
-│ │ ├── auth.js # Rotas de autenticação
-│ │ ├── pacientes.js # Rotas de pacientes
-│ │ ├── usuarios.js # Rotas de usuários
-│ │ └── registros.js # Rotas de registros
-│ └── middleware/
-│ └── auth.js # Middleware de autenticação
-│
-├── docs/ # Documentação técnica
-│ ├── DER-conceitual.pdf # Modelo Conceitual
-│ ├── DER-logico.pdf # Modelo Lógico
-│ └── script-sql.sql # Script SQL
-│
-└── package.json # Dependências do projeto
-
 _____________________________________________________________________________________________________________
 
 
