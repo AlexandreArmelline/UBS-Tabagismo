@@ -186,5 +186,34 @@ router.delete('/:id', async (req, res) => {
 });
 
 
+// 2.6 PATCH /api/pacientes/:id/reativar - Reativar paciente
+router.patch('/:id/reativar', async (req, res) => {
+    try {
+        const paciente = await get('SELECT * FROM pacientes WHERE id = ?', [req.params.id]);
+        
+        if (!paciente) {
+            return res.status(404).json({ erro: 'Paciente não encontrado.' });
+        }
+
+        await run(
+            `UPDATE pacientes SET ativo = 1, data_atualizacao = datetime('now', '-3 hours') WHERE id = ?`,
+            [req.params.id]
+        );
+
+        await run(
+            `INSERT INTO logs (id_usuario, acao, tabela_afetada, id_registro_afetado, dados_novos)
+             VALUES (?, 'REATIVAR', 'pacientes', ?, ?)`,
+            [req.usuario.id, req.params.id, `Paciente "${paciente.nome_completo}" reativado`]
+        );
+
+        res.json({ mensagem: 'Paciente reativado com sucesso!' });
+
+    } catch (err) {
+        console.error('Erro ao reativar paciente:', err);
+        res.status(500).json({ erro: 'Erro ao reativar paciente.' });
+    }
+});
+
+
 // 3 EXPORTAÇÃO
 module.exports = router;

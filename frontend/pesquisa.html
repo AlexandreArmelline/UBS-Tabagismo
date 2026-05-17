@@ -165,7 +165,7 @@
     <!-- 4.3 Paciente JS (buscarPacientes) -->
     <script src="js/paciente.js"></script>
 
-     <!-- 4.4 Inicialização da pesquisa -->
+         <!-- 4.4 Inicialização da pesquisa -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const usuario = JSON.parse(sessionStorage.getItem('usuario'));
@@ -215,62 +215,140 @@
             msgSem.style.display = 'none';
 
             // Tabela desktop
-            tabela.innerHTML = resultados.map(p => `
-                <tr>
-                    <td class="ps-4 fw-semibold">${p.nome_completo}</td>
-                    <td>${p.cpf}</td>
-                    <td>${p.telefone || '-'}</td>
-                    <td>${p.data_adesao ? new Date(p.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}</td>
-                    <td>
-                        <span class="badge ${p.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">
-                            ${p.ativo ? 'Ativo' : 'Inativo'}
-                        </span>
-                    </td>
-                    <td class="text-center pe-4">
-                        <button class="btn btn-sm btn-outline-info me-1" onclick="event.stopPropagation(); window.location.href='registro-clinico.html?id=${p.id}'" title="Registro Clínico">
+            tabela.innerHTML = resultados.map(p => {
+                const botoes = p.ativo 
+                    ? `
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="window.location.href='registro-clinico.html?id=${p.id}'" title="Registro Clínico">
                             <i class="bi bi-clipboard2-pulse-fill"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="event.stopPropagation(); editarPaciente(${p.id})" title="Editar">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editarPaciente(${p.id})" title="Editar">
                             <i class="bi bi-pencil-fill"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')" title="Excluir">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+                        <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')" title="Inativar">
+                            <i class="bi bi-person-x-fill"></i>
+                        </button>`
+                    : `
+                        <button class="btn btn-sm btn-outline-success" onclick="reativarPaciente(${p.id})" title="Reativar">
+                            <i class="bi bi-person-check-fill me-1"></i>Reativar
+                        </button>`;
 
-            // Cards mobile
-            cards.innerHTML = resultados.map(p => `
-                <div class="card shadow-sm border-0 rounded-4 mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="fw-bold mb-0">${p.nome_completo}</h6>
+                return `
+                    <tr>
+                        <td class="ps-4 fw-semibold">${p.nome_completo}</td>
+                        <td>${p.cpf}</td>
+                        <td>${p.telefone || '-'}</td>
+                        <td>${p.data_adesao ? new Date(p.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}</td>
+                        <td>
                             <span class="badge ${p.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">
                                 ${p.ativo ? 'Ativo' : 'Inativo'}
                             </span>
+                        </td>
+                        <td class="text-center pe-4">
+                            ${botoes}
+                        </td>
+                    </tr>`;
+            }).join('');
+
+            // Cards mobile
+            cards.innerHTML = resultados.map(p => {
+                const botoes = p.ativo 
+                    ? `
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="window.location.href='registro-clinico.html?id=${p.id}'">
+                            <i class="bi bi-clipboard2-pulse-fill me-1"></i>Registro
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editarPaciente(${p.id})">
+                            <i class="bi bi-pencil-fill me-1"></i>Editar
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')">
+                            <i class="bi bi-person-x-fill me-1"></i>Inativar
+                        </button>`
+                    : `
+                        <button class="btn btn-sm btn-outline-success w-100" onclick="reativarPaciente(${p.id})">
+                            <i class="bi bi-person-check-fill me-1"></i>Reativar Paciente
+                        </button>`;
+
+                return `
+                    <div class="card shadow-sm border-0 rounded-4 mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="fw-bold mb-0">${p.nome_completo}</h6>
+                                <span class="badge ${p.ativo ? 'bg-success' : 'bg-secondary'} rounded-pill">
+                                    ${p.ativo ? 'Ativo' : 'Inativo'}
+                                </span>
+                            </div>
+                            <p class="small text-muted mb-1">
+                                <i class="bi bi-person-vcard me-1"></i>${p.cpf}
+                            </p>
+                            <p class="small text-muted mb-2">
+                                <i class="bi bi-calendar-check me-1"></i>Adesão: ${p.data_adesao ? new Date(p.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}
+                            </p>
+                            <div class="d-flex gap-1 flex-wrap">
+                                ${botoes}
+                            </div>
                         </div>
-                        <p class="small text-muted mb-1">
-                            <i class="bi bi-person-vcard me-1"></i>${p.cpf}
-                        </p>
-                        <p class="small text-muted mb-2">
-                            <i class="bi bi-calendar-check me-1"></i>Adesão: ${p.data_adesao ? new Date(p.data_adesao + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}
-                        </p>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-info" onclick="window.location.href='registro-clinico.html?id=${p.id}'">
-                                <i class="bi bi-clipboard2-pulse-fill me-1"></i>Registro
-                            </button>
-                            <button class="btn btn-sm btn-outline-primary" onclick="editarPaciente(${p.id})">
-                                <i class="bi bi-pencil-fill me-1"></i>Editar
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${p.id}, '${p.nome_completo.replace(/'/g, "\\'")}')">
-                                <i class="bi bi-trash-fill me-1"></i>Excluir
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+                    </div>`;
+            }).join('');
         }
+
+        // 5 FUNÇÕES
+        function editarPaciente(id) {
+            window.location.href = `add-paciente.html?editar=${id}`;
+        }
+
+        function confirmarExclusao(id, nome) {
+            if (confirm(`Tem certeza que deseja inativar o paciente "${nome}"?`)) {
+                excluirPaciente(id);
+            }
+        }
+
+        async function excluirPaciente(id) {
+            try {
+                const response = await fetch(`${API_URL}/pacientes/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Paciente inativado com sucesso!');
+                    realizarPesquisa();
+                } else {
+                    alert(data.erro || 'Erro ao inativar paciente.');
+                }
+            } catch (err) {
+                alert('Erro ao inativar paciente.');
+            }
+        }
+
+        // 5.4 Reativar paciente
+        async function reativarPaciente(id) {
+            try {
+                const response = await fetch(`${API_URL}/pacientes/${id}/reativar`, {
+                    method: 'PATCH',
+                    headers: getAuthHeaders()
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Paciente reativado com sucesso!');
+                    realizarPesquisa();
+                } else {
+                    alert(data.erro || 'Erro ao reativar paciente.');
+                }
+            } catch (err) {
+                alert('Erro ao reativar paciente.');
+            }
+        }
+
+        function limparPesquisa() {
+            document.getElementById('termoBusca').value = '';
+            document.getElementById('filtroStatus').value = 'todos';
+            document.getElementById('areaResultados').style.display = 'none';
+            document.getElementById('termoBusca').focus();
+        }
+    </script>
 
         // 5 FUNÇÕES DE EDIÇÃO E EXCLUSÃO
         // 5.1 Editar paciente
