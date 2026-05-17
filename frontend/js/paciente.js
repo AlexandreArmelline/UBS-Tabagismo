@@ -47,12 +47,18 @@ async function cadastrarPacienteAPI(dados) {
         });
 
         const data = await response.json();
-        if (!response.ok) throw new Error(data.erro || 'Erro ao cadastrar');
+        
+        if (!response.ok) {
+            // Extrai a mensagem de erro da API
+            throw new Error(data.erro || 'Erro ao cadastrar paciente.');
+        }
+        
         return { sucesso: true, data };
     } catch (err) {
         return { sucesso: false, erro: err.message };
     }
 }
+
 
 
 // 3 FUNÇÕES DE VALIDAÇÃO (LOCAL)
@@ -90,20 +96,21 @@ async function cadastrarPaciente() {
         observacoes: document.getElementById('observacoes').value.trim()
     };
 
+    // Validações
     if (!dados.nome_completo || !dados.cpf || !dados.data_nascimento || !dados.data_adesao) {
         exibirErroPaciente('Preencha todos os campos obrigatórios.');
         return;
     }
 
     if (!validarCPF(dados.cpf)) {
-        exibirErroPaciente('CPF inválido.');
+        exibirErroPaciente('CPF inválido. Verifique o número digitado.');
         return;
     }
 
     const resultado = await cadastrarPacienteAPI(dados);
 
     if (resultado.sucesso) {
-        exibirSucesso(`Paciente cadastrado com sucesso!`);
+        exibirSucesso(`Paciente "${dados.nome_completo}" cadastrado com sucesso!`);
         document.getElementById('formAddPaciente').reset();
         document.getElementById('nomeCompleto').focus();
     } else {
