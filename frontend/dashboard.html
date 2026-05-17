@@ -282,7 +282,7 @@
     <script src="js/app.js"></script>
     <script src="js/registro.js"></script>
 
-    <!-- 4.3 Inicialização do dashboard -->
+        <!-- 4.3 Inicialização do dashboard -->
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const usuario = JSON.parse(sessionStorage.getItem('usuario'));
@@ -303,13 +303,65 @@
             document.getElementById('kpiTaxaCessacao').textContent = dados.taxaCessacao + '%';
             document.getElementById('kpiTotalRegistros').textContent = dados.totalRegistros;
 
-            await carregarUltimosRegistros();
             await carregarGraficoStatus();
+            await carregarUltimosRegistros();
             await carregarMedicamentos();
             await carregarTempoAdesao();
             await carregarMediaCigarros();
         }
 
+        // Gráfico de Status do Tabagismo
+        async function carregarGraficoStatus() {
+            try {
+                // Buscar todos os pacientes
+                const response = await fetch(`${API_URL}/pacientes`, {
+                    headers: getAuthHeaders()
+                });
+                const pacientes = await response.json();
+
+                if (!pacientes || pacientes.length === 0) return;
+
+                let fumam = 0, naoFumam = 0, semRegistro = 0;
+
+                // Para cada paciente, buscar o último registro
+                for (const p of pacientes) {
+                    try {
+                        const resp = await fetch(`${API_URL}/registros/paciente/${p.id}`, {
+                            headers: getAuthHeaders()
+                        });
+                        const registros = await resp.json();
+
+                        if (!registros || registros.length === 0) {
+                            semRegistro++;
+                        } else if (registros[0].fuma_atualmente === 'sim') {
+                            fumam++;
+                        } else if (registros[0].fuma_atualmente === 'nao') {
+                            naoFumam++;
+                        } else {
+                            semRegistro++;
+                        }
+                    } catch (err) {
+                        semRegistro++;
+                    }
+                }
+
+                const total = pacientes.length || 1;
+                const maxAltura = 150;
+
+                document.getElementById('graficoContagemFumam').textContent = fumam;
+                document.getElementById('graficoContagemNaoFumam').textContent = naoFumam;
+                document.getElementById('graficoContagemSemRegistro').textContent = semRegistro;
+
+                document.getElementById('barraFumam').style.height = (fumam / total * maxAltura) + 'px';
+                document.getElementById('barraNaoFumam').style.height = (naoFumam / total * maxAltura) + 'px';
+                document.getElementById('barraSemRegistro').style.height = (semRegistro / total * maxAltura) + 'px';
+
+            } catch (err) {
+                console.error('Erro ao carregar gráfico:', err);
+            }
+        }
+
+        // Últimos registros
         async function carregarUltimosRegistros() {
             const registros = await buscarUltimosRegistrosAPI(10);
             const tabela = document.getElementById('tabelaUltimosRegistros');
@@ -337,37 +389,7 @@
             `).join('');
         }
 
-        async function carregarGraficoStatus() {
-            const pacientes = await buscarPacientes();
-            if (!pacientes || pacientes.length === 0) return;
-
-            let fumam = 0, naoFumam = 0, semRegistro = 0;
-
-            for (const p of pacientes) {
-                const registros = await buscarRegistrosPorPaciente(p.id);
-                if (!registros || registros.length === 0) {
-                    semRegistro++;
-                } else if (registros[0].fuma_atualmente === 'sim') {
-                    fumam++;
-                } else if (registros[0].fuma_atualmente === 'nao') {
-                    naoFumam++;
-                } else {
-                    semRegistro++;
-                }
-            }
-
-            const total = pacientes.length || 1;
-            const maxAltura = 150;
-
-            document.getElementById('graficoContagemFumam').textContent = fumam;
-            document.getElementById('graficoContagemNaoFumam').textContent = naoFumam;
-            document.getElementById('graficoContagemSemRegistro').textContent = semRegistro;
-
-            document.getElementById('barraFumam').style.height = (fumam / total * maxAltura) + 'px';
-            document.getElementById('barraNaoFumam').style.height = (naoFumam / total * maxAltura) + 'px';
-            document.getElementById('barraSemRegistro').style.height = (semRegistro / total * maxAltura) + 'px';
-        }
-
+        // Medicamentos
         async function carregarMedicamentos() {
             const registros = await buscarUltimosRegistrosAPI(1000);
             const tabela = document.getElementById('tabelaMedicamentos');
@@ -398,10 +420,14 @@
             `).join('');
         }
 
+        // Tempo de adesão
         async function carregarTempoAdesao() {
-            const pacientes = await buscarPacientes();
+            const response = await fetch(`${API_URL}/pacientes`, {
+                headers: getAuthHeaders()
+            });
+            const pacientes = await response.json();
             const tabela = document.getElementById('tabelaTempoAdesao');
-            if (!tabela) return;
+            if (!tabela || !pacientes) return;
 
             const hoje = new Date();
             const periodos = { 'Até 3 meses': 0, '3 a 6 meses': 0, '6 a 12 meses': 0, 'Mais de 12 meses': 0 };
@@ -421,21 +447,37 @@
             `).join('');
         }
 
+        // Média de cigarros
         async function carregarMediaCigarros() {
-            const pacientes = await buscarPacientes();
-            let soma = 0, contagem = 0;
+            try {
+                const response = await fetch(`${API_URL}/pacientes`, {
+                    headers: getAuthHeaders()
+                });
+                const pacientes = await response.json();
+                let soma = 0, contagem = 0;
 
-            for (const p of pacientes) {
-                const registros = await buscarRegistrosPorPaciente(p.id);
-                if (registros && registros.length > 0 &&
-                    registros[0].fuma_atualmente === 'sim' &&
-                    registros[0].quantidade_cigarros) {
-                    soma += parseInt(registros[0].quantidade_cigarros);
-                    contagem++;
+                for (const p of pacientes) {
+                    try {
+                        const resp = await fetch(`${API_URL}/registros/paciente/${p.id}`, {
+                            headers: getAuthHeaders()
+                        });
+                        const registros = await resp.json();
+
+                        if (registros && registros.length > 0 &&
+                            registros[0].fuma_atualmente === 'sim' &&
+                            registros[0].quantidade_cigarros) {
+                            soma += parseInt(registros[0].quantidade_cigarros);
+                            contagem++;
+                        }
+                    } catch (err) {
+                        // ignora
+                    }
                 }
-            }
 
-            document.getElementById('mediaCigarros').textContent = contagem > 0 ? Math.round(soma / contagem) : '0';
+                document.getElementById('mediaCigarros').textContent = contagem > 0 ? Math.round(soma / contagem) : '0';
+            } catch (err) {
+                console.error('Erro ao calcular média:', err);
+            }
         }
     </script>
 
